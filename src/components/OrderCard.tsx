@@ -1,0 +1,201 @@
+// "use client";
+
+// import { useAuth } from "../../context/AuthContext";
+// import { useContract } from "@/app/hooks/useContract";
+// import { Order } from "@/app/hooks/useOrders";
+// import { ethers } from "ethers";
+
+// interface OrderCardProps {
+//     order: Order;
+//     onAssignAgent: (order: Order) => void;
+// }
+
+// export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
+//     const { user } = useAuth();
+//     const { signedContract } = useContract();
+
+//     const handleConfirm = async (funcName: 'buyerConfirmDelivery' | 'agentConfirmDelivery') => {
+//         if (!signedContract) return alert("Wallet not connected.");
+//         try {
+//             const tx = await signedContract[funcName](order.id);
+//             await tx.wait();
+//             alert("Confirmation successful! The order list will refresh.");
+//             window.location.reload(); // Simple refresh for now
+//         } catch (error) {
+//             console.error("Confirmation failed:", error);
+//             alert("Confirmation failed.");
+//         }
+//     };
+    
+//     const handleAcceptOffer = async () => {
+//         if (!signedContract) return alert("Wallet not connected.");
+//         try {
+//             const tx = await signedContract.acceptAgentOffer(order.id);
+//             await tx.wait();
+//             alert("Offer accepted! You are now assigned to this order.");
+//             window.location.reload();
+//         } catch (error) {
+//             console.error("Failed to accept offer:", error);
+//             alert("Failed to accept offer.");
+//         }
+//     };
+
+
+//     const isUser = (role: 'buyer' | 'seller' | 'agent') => {
+//         if (!user.walletAddress) return false;
+//         const address = user.walletAddress.toLowerCase();
+//         if (role === 'buyer') return address === order.buyer.toLowerCase();
+//         if (role === 'seller') return address === order.seller.toLowerCase();
+//         if (role === 'agent') return address === order.deliveryAgent.toLowerCase();
+//         return false;
+//     };
+
+//     return (
+//         <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 flex flex-col justify-between">
+//             <div>
+//                 <div className="flex justify-between items-start mb-2">
+//                     <h4 className="font-bold text-lg text-white">Order #{String(order.id)}</h4>
+//                     <span className="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-500 text-cyan-900">{order.status}</span>
+//                 </div>
+//                 <p className="text-md text-gray-300 truncate">{String(order.quantity)} x {order.listingName}</p>
+//                 <p className="text-teal-400 font-semibold text-lg my-2">{ethers.formatEther(order.totalAmount)} ETH</p>
+//                 {/* Add more details like confirmations if you want */}
+//             </div>
+//             <div className="mt-4 space-y-2">
+//                 {/* Seller's Action */}
+//                 {user.role === 'seller' && isUser('seller') && order.status === 'AWAITING_AGENT' && (
+//                     <button onClick={() => onAssignAgent(order)} className="w-full bg-teal-500 text-gray-900 font-bold py-2 rounded-lg">Assign Agent</button>
+//                 )}
+
+//                 {/* Buyer's Action */}
+//                 {user.role === 'buyer' && isUser('buyer') && order.status === 'AWAITING_DELIVERY' && !order.buyerConfirmed && (
+//                     <button onClick={() => handleConfirm('buyerConfirmDelivery')} className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg">Confirm Delivery</button>
+//                 )}
+
+//                 {/* Agent's Actions */}
+//                 {user.role === 'agent' && order.status === 'AWAITING_AGENT' && (
+//                      <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
+//                 )}
+//                 {user.role === 'agent' && isUser('agent') && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
+//                     <button onClick={() => handleConfirm('agentConfirmDelivery')} className="w-full bg-purple-500 text-white font-bold py-2 rounded-lg">Confirm Pickup/Delivery</button>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
+
+"use client";
+
+import { useAuth } from "../../context/AuthContext";
+import { useContract } from "@/app/hooks/useContract";
+import { Order } from "@/app/hooks/useOrders";
+import { ethers } from "ethers";
+
+interface OrderCardProps {
+    order: Order;
+    onAssignAgent: (order: Order) => void;
+}
+
+export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
+    const { user } = useAuth();
+    const { signedContract } = useContract();
+
+    // The handler functions (handleConfirm, handleAcceptOffer) remain exactly the same.
+    const handleConfirm = async (funcName: 'buyerConfirmDelivery' | 'agentConfirmDelivery') => {
+        if (!signedContract) return alert("Wallet not connected.");
+        try {
+            const tx = await signedContract[funcName](order.id);
+            await tx.wait();
+            alert("Confirmation successful! The order list will refresh.");
+            window.location.reload(); // Simple refresh for now
+        } catch (error) {
+            console.error("Confirmation failed:", error);
+            alert("Confirmation failed.");
+        }
+    };
+    
+    const handleAcceptOffer = async () => {
+        if (!signedContract) return alert("Wallet not connected.");
+        try {
+            const tx = await signedContract.acceptAgentOffer(order.id);
+            await tx.wait();
+            alert("Offer accepted! You are now assigned to this order.");
+            window.location.reload();
+        } catch (error) {
+            console.error("Failed to accept offer:", error);
+            alert("Failed to accept offer.");
+        }
+    };
+
+    const isUser = (role: 'buyer' | 'seller' | 'agent') => {
+        if (!user.walletAddress) return false;
+        const address = user.walletAddress.toLowerCase();
+        if (role === 'buyer') return address === order.buyer.toLowerCase();
+        if (role === 'seller') return address === order.seller.toLowerCase();
+        if (role === 'agent') return address === order.deliveryAgent.toLowerCase();
+        return false;
+    };
+
+    const getStatusColor = () => {
+        switch (order.status) {
+            case 'AWAITING_AGENT': return 'bg-cyan-500 text-cyan-900';
+            case 'AWAITING_DELIVERY': return 'bg-yellow-500 text-yellow-900';
+            case 'COMPLETE': return 'bg-green-500 text-green-900';
+            case 'REFUNDED': return 'bg-red-500 text-red-900';
+            default: return 'bg-gray-500 text-gray-900';
+        }
+    };
+
+    return (
+        <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 flex flex-col justify-between">
+            <div>
+                <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-lg text-white">Order #{String(order.id)}</h4>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor()}`}>{order.status}</span>
+                </div>
+                <p className="text-md text-gray-300 truncate">{String(order.quantity)} x {order.listingName}</p>
+                <p className="text-teal-400 font-semibold text-lg my-2">{ethers.formatEther(order.totalAmount)} ETH</p>
+
+                {/* --- NEW SECTION START --- */}
+                {/* This section shows the detailed confirmation status for deliveries */}
+                {order.status === 'AWAITING_DELIVERY' && (
+                    <div className="text-xs space-y-1 my-3 p-3 bg-gray-900/50 rounded-md border border-gray-700">
+                        <p className={`flex items-center font-semibold ${order.agentConfirmed ? "text-green-400" : "text-gray-400"}`}>
+                            {order.agentConfirmed ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" /></svg>
+                            )}
+                            Agent Confirmed
+                        </p>
+                        <p className={`flex items-center font-semibold ${order.buyerConfirmed ? "text-green-400" : "text-gray-400"}`}>
+                           {order.buyerConfirmed ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" /></svg>
+                            )}
+                            Buyer Confirmed
+                        </p>
+                    </div>
+                )}
+                {/* --- NEW SECTION END --- */}
+
+            </div>
+            <div className="mt-4 space-y-2">
+                {/* All the action buttons remain the same as before */}
+                {user.role === 'seller' && isUser('seller') && order.status === 'AWAITING_AGENT' && (
+                    <button onClick={() => onAssignAgent(order)} className="w-full bg-teal-500 text-gray-900 font-bold py-2 rounded-lg">Assign Agent</button>
+                )}
+                {user.role === 'buyer' && isUser('buyer') && order.status === 'AWAITING_DELIVERY' && !order.buyerConfirmed && (
+                    <button onClick={() => handleConfirm('buyerConfirmDelivery')} className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg">Confirm Delivery</button>
+                )}
+                {user.role === 'agent' && order.status === 'AWAITING_AGENT' && (
+                     <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
+                )}
+                {user.role === 'agent' && isUser('agent') && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
+                    <button onClick={() => handleConfirm('agentConfirmDelivery')} className="w-full bg-purple-500 text-white font-bold py-2 rounded-lg">Confirm Pickup/Delivery</button>
+                )}
+            </div>
+        </div>
+    );
+};
