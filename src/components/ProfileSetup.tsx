@@ -12,7 +12,7 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
     const [name, setName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [addressText, setAddressText] = useState('');
-    const [role, setRole] = useState<'buyer' | 'seller' | 'agent' | ''>('');
+    const [role, setRole] = useState<'user' | 'agent' | ''>('');
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -56,13 +56,10 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                 <div>
                     <p>Select your role:</p>
                     <label>
-                        <input type="radio" name="role" value="buyer" onChange={e => setRole('buyer')} checked={role === 'buyer'} /> Buyer
+                        <input type="radio" name="role" value="user" onChange={e => setRole('user')} checked={role === 'user'} /> Industry (Prosumer)
                     </label>
                     <label style={{ marginLeft: '1rem' }}>
-                        <input type="radio" name="role" value="seller" onChange={e => setRole('seller')} checked={role === 'seller'} /> Seller
-                    </label>
-                    <label style={{ marginLeft: '1rem' }}>
-                        <input type="radio" name="role" value="agent" onChange={e => setRole('agent')} checked={role === 'agent'} /> Agent
+                        <input type="radio" name="role" value="agent" onChange={e => setRole('agent')} checked={role === 'agent'} /> Logistics Agent
                     </label>
                 </div>
                 

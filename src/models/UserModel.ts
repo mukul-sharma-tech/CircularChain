@@ -7,7 +7,7 @@ export interface IUser extends Document {
   name?: string;
   companyName?: string;
   addressText?: string;
-  role: 'seller' | 'buyer' | 'agent' | 'admin' | 'pending';
+  role: 'user' | 'agent' | 'admin' | 'pending';
   nonce: string;
   isAvailable?: boolean; // <-- ADD THIS FIELD (optional)
 
@@ -34,7 +34,7 @@ const UserSchema: Schema<IUser> = new Schema({
   },
   role: {
     type: String,
-    enum: ['seller', 'buyer', 'agent', 'admin', 'pending'],
+    enum: ['user', 'agent', 'admin', 'pending'],
     default: 'pending',
   },
   nonce: {

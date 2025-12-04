@@ -54,6 +54,9 @@ export const AgentOffers = () => {
                     <h4 className="font-bold">Offer for Order #{offer.orderId}</h4>
                     <p className="text-sm text-gray-300">{offer.wasteMaterial}</p>
                     <p className="text-xs text-gray-400">{offer.originLocation} to {offer.destinationLocation}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                        Logistics Type: {offer.isLocalAgent ? "Local / Offline (No payout)" : "Platform Agent (5% fee)"}
+                    </p>
                     <div className="mt-4 flex gap-4 items-center">
                         <button onClick={() => setSelectedPlan(offer.compliancePlan)} className="text-sm font-semibold text-teal-400 hover:underline">View Compliance Plan</button>
                         <button onClick={() => handleAccept(offer.orderId)} className="text-sm font-semibold bg-green-600 px-3 py-1 rounded text-white">Accept On-Chain</button>

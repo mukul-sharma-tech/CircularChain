@@ -102,6 +102,9 @@ export async function POST(req: NextRequest) {
         walletAddress: user.walletAddress,
         role: user.role,
         isLoggedIn: true,
+        name: user.name,
+        companyName: user.companyName,
+        addressText: user.addressText,
         isAvailable: user.isAvailable,
     };
     await session.save();

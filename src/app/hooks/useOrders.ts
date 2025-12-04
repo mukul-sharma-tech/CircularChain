@@ -1,106 +1,3 @@
-// "use client";
-
-// import { useAuth } from "../../../context/AuthContext";
-// import { useEffect, useState } from "react";
-// import { useContract } from "./useContract";
-// import { ethers } from "ethers";
-
-// // Define the types for our data structures
-// export type OrderStatus = 'AWAITING_AGENT' | 'AWAITING_DELIVERY' | 'COMPLETE' | 'REFUNDED' | 'UNKNOWN';
-
-// export interface Order {
-//   id: bigint;
-//   listingId: bigint;
-//   listingName: string; // We'll add this for display
-//   seller: string; // And this
-//   quantity: bigint;
-//   totalAmount: bigint;
-//   buyer: string;
-//   deliveryAgent: string;
-//   agentConfirmed: boolean;
-//   buyerConfirmed: boolean;
-//   status: OrderStatus;
-// }
-
-// const getOrderStatus = (status: number): OrderStatus => {
-//     switch (status) {
-//         case 0: return 'AWAITING_AGENT';
-//         case 1: return 'AWAITING_DELIVERY';
-//         case 2: return 'COMPLETE';
-//         case 3: return 'REFUNDED';
-//         default: return 'UNKNOWN';
-//     }
-// };
-
-// export const useOrders = () => {
-//     const { user } = useAuth();
-//     const { readOnlyContract } = useContract();
-//     const [orders, setOrders] = useState<Order[]>([]);
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//         const fetchOrders = async () => {
-//             if (!readOnlyContract || !user.walletAddress) {
-//                 setLoading(false);
-//                 return;
-//             }
-
-//             try {
-//                 setLoading(true);
-//                 const nextOrderId = await readOnlyContract.nextOrderId();
-//                 const listingsMap = new Map<bigint, { name: string; seller: string }>();
-
-//                 // Pre-fetch listing details to avoid multiple calls inside the loop
-//                 const nextListingId = await readOnlyContract.nextListingId();
-//                 for (let i = 1; i < Number(nextListingId); i++) {
-//                     const listing = await readOnlyContract.listings(i);
-//                     listingsMap.set(listing.id, { name: listing.name, seller: listing.seller });
-//                 }
-
-//                 const userOrders: Order[] = [];
-//                 const userAddress = user.walletAddress.toLowerCase();
-
-//                 for (let i = 1; i < Number(nextOrderId); i++) {
-//                     const orderData = await readOnlyContract.orders(i);
-//                     const listingInfo = listingsMap.get(orderData.listingId);
-
-//                     if (listingInfo) {
-//                         const isBuyer = orderData.buyer.toLowerCase() === userAddress;
-//                         const isSeller = listingInfo.seller.toLowerCase() === userAddress;
-//                         const isAgent = orderData.deliveryAgent.toLowerCase() === userAddress && orderData.deliveryAgent !== ethers.ZeroAddress;
-
-//                         // Add order if user is involved
-//                         if (isBuyer || isSeller || isAgent) {
-//                             userOrders.push({
-//                                 id: orderData.id,
-//                                 listingId: orderData.listingId,
-//                                 listingName: listingInfo.name,
-//                                 seller: listingInfo.seller,
-//                                 quantity: orderData.quantity,
-//                                 totalAmount: orderData.totalAmount,
-//                                 buyer: orderData.buyer,
-//                                 deliveryAgent: orderData.deliveryAgent,
-//                                 agentConfirmed: orderData.agentConfirmed,
-//                                 buyerConfirmed: orderData.buyerConfirmed,
-//                                 status: getOrderStatus(Number(orderData.status)),
-//                             });
-//                         }
-//                     }
-//                 }
-//                 setOrders(userOrders.reverse());
-//             } catch (error) {
-//                 console.error("Failed to fetch orders:", error);
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchOrders();
-//     }, [readOnlyContract, user.walletAddress]);
-
-//     return { orders, loading };
-// };
-
 "use client";
 
 import { useAuth } from "../../../context/AuthContext";
@@ -114,15 +11,20 @@ export type OrderStatus = 'AWAITING_AGENT' | 'AWAITING_DELIVERY' | 'COMPLETE' | 
 export interface Order {
   id: bigint;
   listingId: bigint;
-  listingName: string; 
-  seller: string; 
+  listingName: string;
+  seller: string;
   quantity: bigint;
   totalAmount: bigint;
   buyer: string;
+  buyerName: string;
+  buyerCompany: string;
   deliveryAgent: string;
   agentConfirmed: boolean;
   buyerConfirmed: boolean;
   status: OrderStatus;
+  paymentMethod: 'ETH' | 'FIAT';
+  isLocalAgent: boolean;
+  hasPendingOfferForAgent?: boolean;
 }
 
 const getOrderStatus = (status: number): OrderStatus => {
@@ -181,7 +83,7 @@ export const useOrders = () => {
                         // --- NEW LOGIC END ---
 
                         // Add order if user is the buyer, seller, assigned agent, OR has a pending offer.
-                        if (isBuyer || isSeller || isAgent || isOfferPendingForMe) {
+                                if (isBuyer || isSeller || isAgent || isOfferPendingForMe) {
                             userOrders.push({
                                 id: orderData.id,
                                 listingId: orderData.listingId,
@@ -190,10 +92,15 @@ export const useOrders = () => {
                                 quantity: orderData.quantity,
                                 totalAmount: orderData.totalAmount,
                                 buyer: orderData.buyer,
+                                buyerName: orderData.buyerName,
+                                buyerCompany: orderData.buyerCompany,
                                 deliveryAgent: orderData.deliveryAgent,
                                 agentConfirmed: orderData.agentConfirmed,
                                 buyerConfirmed: orderData.buyerConfirmed,
                                 status: getOrderStatus(Number(orderData.status)),
+                                paymentMethod: Number(orderData.paymentMethod) === 0 ? 'ETH' : 'FIAT',
+                                        isLocalAgent: orderData.isLocalAgent,
+                                        hasPendingOfferForAgent: isOfferPendingForMe,
                             });
                         }
                     }

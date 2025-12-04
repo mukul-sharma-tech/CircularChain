@@ -153,7 +153,10 @@ interface User {
     isLoggedIn: boolean;
     walletAddress?: string;
     role?: string;
-    isAvailable?: boolean; // <-- ADD THIS LINE
+    name?: string;
+    companyName?: string;
+    addressText?: string;
+    isAvailable?: boolean;
 }
 
 // 2. Define the shape of the Context, including the updated login return type and updateUser function

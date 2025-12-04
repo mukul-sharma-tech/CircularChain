@@ -5,15 +5,19 @@ import { motion } from "framer-motion";
 
 interface CommissionEntry {
     orderId: string;
-    feeAmount: bigint;
-    timestamp: number;
-    blockNumber: number;
     seller: string;
     buyer: string;
+    sellerPayoutWei: string;
+    adminFeeWei: string;
+    agentFeeWei: string;
+    timestamp: number;
+    blockNumber: number;
+    paymentMethod: 'ETH' | 'FIAT';
+    isLocalAgent: boolean;
 }
 
 interface AdminStats {
-    totalEarnings: bigint;
+    totalEarningsWei: string;
     commissionHistory: CommissionEntry[];
 }
 
@@ -94,7 +98,7 @@ export const AdminPanel = () => {
             >
                 <h3 className="text-xl font-semibold text-teal-400 mb-2">Total Platform Earnings</h3>
                 <p className="text-4xl font-bold text-white">
-                    {ethers.formatEther(stats.totalEarnings)} ETH
+                    {ethers.formatEther(BigInt(stats.totalEarningsWei))} ETH
                 </p>
             </motion.div>
 
@@ -117,7 +121,10 @@ export const AdminPanel = () => {
                                 <div>
                                     <p className="font-semibold text-white">Order #{entry.orderId}</p>
                                     <p className="text-xs text-gray-400 mt-1">
-                                        From: {entry.seller.slice(0, 6)}... to {entry.buyer.slice(0, 6)}...
+                                        From: {entry.seller.slice(0, 6)}... → Buyer {entry.buyer.slice(0, 6)}...
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                        Payment: {entry.paymentMethod} · {entry.isLocalAgent ? "Local Logistics" : "Platform Agent"}
                                     </p>
                                     <p className="text-xs text-gray-500 mt-1">
                                         {new Date(entry.timestamp * 1000).toLocaleString()}
@@ -125,9 +132,11 @@ export const AdminPanel = () => {
                                 </div>
                                 <div className="text-right">
                                     <p className="font-bold text-teal-400 text-lg">
-                                        + {ethers.formatEther(entry.feeAmount)} ETH
+                                        + {ethers.formatEther(BigInt(entry.adminFeeWei))} ETH
                                     </p>
-                                    <p className="text-xs text-gray-500">Commission</p>
+                                    <p className="text-xs text-gray-500">
+                                        Agent Fee: {entry.isLocalAgent ? "0 (Local)" : `${ethers.formatEther(BigInt(entry.agentFeeWei))} ETH`}
+                                    </p>
                                 </div>
                             </motion.div>
                         ))

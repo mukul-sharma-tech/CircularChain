@@ -74,13 +74,21 @@ export const CreateListingForm = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [grade, setGrade] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [purity, setPurity] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCreateListing = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signedContract || !user.role) {
-      setMessage("Please connect your wallet first.");
+    if (!signedContract || user.role !== "user") {
+      setMessage("Please connect your wallet as a verified industry user.");
+      return;
+    }
+    if (!user.companyName) {
+      setMessage("Complete your profile with a company name before creating listings.");
       return;
     }
 
@@ -88,17 +96,26 @@ export const CreateListingForm = () => {
     setMessage("Processing transaction...");
 
     try {
+      const quantityBigInt = BigInt(quantity);
+      const hashPayload = `${description.trim()}|${grade.trim()}|${origin.trim()}|${purity.trim()}`;
+      const dataHash = ethers.sha256(ethers.toUtf8Bytes(hashPayload));
+
       const tx = await signedContract.createListing(
         name,
-        user.role,
+        user.companyName,
         ethers.parseEther(price),
-        quantity
+        quantityBigInt,
+        dataHash
       );
       await tx.wait();
       setMessage("Listing created successfully! It will appear in the marketplace shortly.");
       setName("");
       setPrice("");
       setQuantity("");
+      setDescription("");
+      setGrade("");
+      setOrigin("");
+      setPurity("");
     } catch (error) {
       console.error("Failed to create listing:", error);
       setMessage("Error: Failed to create listing.");
@@ -109,19 +126,22 @@ export const CreateListingForm = () => {
 
   return (
     <motion.div
-      className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl border border-teal-500/30 shadow-lg max-w-md mx-auto mt-6"
+      className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl border border-teal-500/30 shadow-lg max-w-2xl mx-auto mb-6"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
       <h3 className="text-xl font-bold mb-4 text-white">Create a New Listing</h3>
-      <form onSubmit={handleCreateListing} className="flex flex-col gap-3">
+      <p className="text-sm text-gray-400 mb-4">
+        We hash your description + specifications to anchor the data integrity on-chain.
+      </p>
+      <form onSubmit={handleCreateListing} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Material Name (e.g., Scrap Metal)"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700 col-span-1 md:col-span-2"
           required
         />
         <input
@@ -138,12 +158,44 @@ export const CreateListingForm = () => {
           onChange={(e) => setQuantity(e.target.value)}
           placeholder="Total Quantity"
           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          min="1"
+          required
+        />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Short Description (what is the material, condition, etc.)"
+          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700 col-span-1 md:col-span-2 min-h-[100px]"
+          required
+        />
+        <input
+          type="text"
+          value={grade}
+          onChange={(e) => setGrade(e.target.value)}
+          placeholder="Grade"
+          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          required
+        />
+        <input
+          type="text"
+          value={origin}
+          onChange={(e) => setOrigin(e.target.value)}
+          placeholder="Origin"
+          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          required
+        />
+        <input
+          type="text"
+          value={purity}
+          onChange={(e) => setPurity(e.target.value)}
+          placeholder="Purity"
+          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
           required
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-400 transition-colors"
+          className="col-span-1 md:col-span-2 bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-400 transition-colors"
         >
           {loading ? "Creating..." : "Create Listing"}
         </button>

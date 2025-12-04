@@ -9,6 +9,7 @@ export interface IOffer extends Document {
   wasteMaterial: string;
   originLocation: string;
   destinationLocation: string;
+  isLocalAgent: boolean;
 }
 
 const OfferSchema: Schema<IOffer> = new Schema({
@@ -20,6 +21,7 @@ const OfferSchema: Schema<IOffer> = new Schema({
   wasteMaterial: { type: String, required: true },
   originLocation: { type: String, required: true },
   destinationLocation: { type: String, required: true },
+  isLocalAgent: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const OfferModel: Model<IOffer> = mongoose.models.Offer || mongoose.model<IOffer>('Offer', OfferSchema);

@@ -1,84 +1,3 @@
-// "use client";
-
-// import { useState } from "react"; // <-- Import useState
-// import { useAuth } from "../../../context/AuthContext";
-// import { useRouter } from "next/navigation";
-// import { useEffect } from "react";
-// import ProfileSetup from "@/components/ProfileSetup";
-// import { CreateListingForm } from "@/components/CreateListingForm";
-// import { MarketplaceView } from "@/components/MarketplaceView";
-// import { MyOrdersView } from "@/components/MyOrdersView"; // <-- Import MyOrdersView
-// import { AgentHub } from "@/components/AgentHub";
-// import { AdminPanel } from "@/components/AdminPanel";
-
-// export default function DashboardPage() {
-//     const { user, loading, updateUser } = useAuth();
-//     const router = useRouter();
-//     const [view, setView] = useState<'marketplace' | 'orders'>('marketplace'); // Tab state
-
-//     useEffect(() => {
-//         if (!loading && !user.isLoggedIn) {
-//             router.push('/');
-//         }
-//     }, [user, loading, router]);
-
-//     if (loading) return <div className="text-center pt-8">Loading...</div>;
-//     if (!user.isLoggedIn) return null;
-//     if (user.role === 'pending') return <ProfileSetup onProfileComplete={updateUser} />;
-
-//     const renderContent = () => {
-//         if (view === 'marketplace') {
-//             return (
-//                 <>
-//                     {user.role === 'seller' && <CreateListingForm />}
-//                     <div className="mt-8"><MarketplaceView /></div>
-//                 </>
-//             );
-//         }
-//         if (view === 'orders') {
-//             return <MyOrdersView />;
-//         }
-//     };
-
-
-//     if (user.role === 'admin') {
-//         return (
-//             <div className="p-4 md:p-8">
-//                 <h1 className="text-3xl font-bold mb-8">Platform Admin Dashboard</h1>
-//                 <AdminPanel />
-//             </div>
-//         );
-//     }
-
-
-//     // Agent has a different, simpler dashboard
-//     if (user.role === 'agent') {
-//         return (
-//             <div className="p-4 md:p-8">
-//                 <h1 className="text-3xl font-bold mb-6">Welcome Agent, {user.walletAddress?.slice(0, 6)}...</h1>
-//                 <AgentHub />
-//                 {/* <AgentDashboard /> */}
-//             </div>
-//         )
-//     }
-
-//     return (
-//         <div className="p-4 md:p-8">
-//             <div className="border-b border-gray-700 mb-6">
-//                 <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-//                     <button onClick={() => setView('marketplace')} className={`${view === 'marketplace' ? 'border-teal-400 text-white' : 'border-transparent text-gray-400 hover:text-white'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>
-//                         Marketplace
-//                     </button>
-//                     <button onClick={() => setView('orders')} className={`${view === 'orders' ? 'border-teal-400 text-white' : 'border-transparent text-gray-400 hover:text-white'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>
-//                         My Orders
-//                     </button>
-//                 </nav>
-//             </div>
-//             {renderContent()}
-//         </div>
-//     );
-// }
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -91,11 +10,14 @@ import { MyOrdersView } from "@/components/MyOrdersView";
 import { AgentHub } from "@/components/AgentHub";
 import { AdminPanel } from "@/components/AdminPanel";
 import { motion } from "framer-motion";
+import { useUserEarnings } from "@/app/hooks/useUserEarnings";
+import { ethers } from "ethers";
 
 export default function DashboardPage() {
   const { user, loading, updateUser } = useAuth();
   const router = useRouter();
   const [view, setView] = useState<"marketplace" | "orders">("marketplace");
+  const { totalEarnings, loading: earningsLoading } = useUserEarnings();
 
   useEffect(() => {
     if (!loading && !user?.isLoggedIn) router.push("/");
@@ -120,10 +42,20 @@ export default function DashboardPage() {
   // Agent View
   if (user.role === "agent") {
     return (
-<div className="min-h-screen bg-gradient-to-br from-[#0a0a1a] via-[#101020] to-[#1a1a2e] p-8 text-white">
+        <div className="min-h-screen bg-gradient-to-br from-[#0a0a1a] via-[#101020] to-[#1a1a2e] p-8 text-white">
         <h1 className="text-3xl font-bold mb-6 text-center">
           Welcome Agent, {user.walletAddress?.slice(0, 6)}...
         </h1>
+        <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 mb-6">
+            <h3 className="text-lg font-bold text-white mb-2">My Earnings</h3>
+            {earningsLoading ? (
+                <p>Loading earnings...</p>
+            ) : (
+                // <p className="text-2xl font-bold text-teal-400">{ethers.formatEther(totalEarnings)} ETH</p>
+                                <p className="text-2xl font-bold text-teal-400">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
+                
+            )}
+        </div>
         <AgentHub />
       </div>
     );
@@ -134,16 +66,7 @@ export default function DashboardPage() {
     if (view === "marketplace") {
       return (
         <>
-          {user.role === "seller" && (
-            <motion.div
-              className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl mb-6 shadow-lg hover:shadow-teal-400/40 transition-shadow"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <CreateListingForm />
-            </motion.div>
-          )}
+          {user.role === "user" && <CreateListingForm />}
           <motion.div
             className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl shadow-lg hover:shadow-teal-400/40 transition-shadow"
             initial={{ opacity: 0 }}
@@ -162,6 +85,16 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a1a] via-[#101020] to-[#1a1a2e] p-8 text-white">
+        <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 mb-6">
+            <h3 className="text-lg font-bold text-white mb-2">My Earnings</h3>
+            {earningsLoading ? (
+                <p>Loading earnings...</p>
+            ) : (
+                // <p className="text-2xl font-bold text-teal-400">{ethers.formatEther(totalEarnings)} ETH</p>
+                <p className="text-2xl font-bold text-teal-400">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
+                
+            )}
+        </div>
       {/* Tabs */}
       <div className="border-b border-gray-700 mb-6 flex justify-center">
         {["marketplace", "orders"].map((tab) => (

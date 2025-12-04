@@ -1,89 +1,3 @@
-// "use client";
-
-// import { useAuth } from "../../context/AuthContext";
-// import { useContract } from "@/app/hooks/useContract";
-// import { Order } from "@/app/hooks/useOrders";
-// import { ethers } from "ethers";
-
-// interface OrderCardProps {
-//     order: Order;
-//     onAssignAgent: (order: Order) => void;
-// }
-
-// export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
-//     const { user } = useAuth();
-//     const { signedContract } = useContract();
-
-//     const handleConfirm = async (funcName: 'buyerConfirmDelivery' | 'agentConfirmDelivery') => {
-//         if (!signedContract) return alert("Wallet not connected.");
-//         try {
-//             const tx = await signedContract[funcName](order.id);
-//             await tx.wait();
-//             alert("Confirmation successful! The order list will refresh.");
-//             window.location.reload(); // Simple refresh for now
-//         } catch (error) {
-//             console.error("Confirmation failed:", error);
-//             alert("Confirmation failed.");
-//         }
-//     };
-    
-//     const handleAcceptOffer = async () => {
-//         if (!signedContract) return alert("Wallet not connected.");
-//         try {
-//             const tx = await signedContract.acceptAgentOffer(order.id);
-//             await tx.wait();
-//             alert("Offer accepted! You are now assigned to this order.");
-//             window.location.reload();
-//         } catch (error) {
-//             console.error("Failed to accept offer:", error);
-//             alert("Failed to accept offer.");
-//         }
-//     };
-
-
-//     const isUser = (role: 'buyer' | 'seller' | 'agent') => {
-//         if (!user.walletAddress) return false;
-//         const address = user.walletAddress.toLowerCase();
-//         if (role === 'buyer') return address === order.buyer.toLowerCase();
-//         if (role === 'seller') return address === order.seller.toLowerCase();
-//         if (role === 'agent') return address === order.deliveryAgent.toLowerCase();
-//         return false;
-//     };
-
-//     return (
-//         <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 flex flex-col justify-between">
-//             <div>
-//                 <div className="flex justify-between items-start mb-2">
-//                     <h4 className="font-bold text-lg text-white">Order #{String(order.id)}</h4>
-//                     <span className="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-500 text-cyan-900">{order.status}</span>
-//                 </div>
-//                 <p className="text-md text-gray-300 truncate">{String(order.quantity)} x {order.listingName}</p>
-//                 <p className="text-teal-400 font-semibold text-lg my-2">{ethers.formatEther(order.totalAmount)} ETH</p>
-//                 {/* Add more details like confirmations if you want */}
-//             </div>
-//             <div className="mt-4 space-y-2">
-//                 {/* Seller's Action */}
-//                 {user.role === 'seller' && isUser('seller') && order.status === 'AWAITING_AGENT' && (
-//                     <button onClick={() => onAssignAgent(order)} className="w-full bg-teal-500 text-gray-900 font-bold py-2 rounded-lg">Assign Agent</button>
-//                 )}
-
-//                 {/* Buyer's Action */}
-//                 {user.role === 'buyer' && isUser('buyer') && order.status === 'AWAITING_DELIVERY' && !order.buyerConfirmed && (
-//                     <button onClick={() => handleConfirm('buyerConfirmDelivery')} className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg">Confirm Delivery</button>
-//                 )}
-
-//                 {/* Agent's Actions */}
-//                 {user.role === 'agent' && order.status === 'AWAITING_AGENT' && (
-//                      <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
-//                 )}
-//                 {user.role === 'agent' && isUser('agent') && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
-//                     <button onClick={() => handleConfirm('agentConfirmDelivery')} className="w-full bg-purple-500 text-white font-bold py-2 rounded-lg">Confirm Pickup/Delivery</button>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
 "use client";
 
 import { useAuth } from "../../context/AuthContext";
@@ -136,6 +50,10 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
         return false;
     };
 
+    const isBuyer = isUser('buyer');
+    const isSeller = isUser('seller');
+    const isAssignedAgent = isUser('agent');
+
     const getStatusColor = () => {
         switch (order.status) {
             case 'AWAITING_AGENT': return 'bg-cyan-500 text-cyan-900';
@@ -155,6 +73,12 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
                 </div>
                 <p className="text-md text-gray-300 truncate">{String(order.quantity)} x {order.listingName}</p>
                 <p className="text-teal-400 font-semibold text-lg my-2">{ethers.formatEther(order.totalAmount)} ETH</p>
+                <p className="text-sm text-gray-400">
+                    Buyer: {order.buyerName || order.buyer.slice(0, 6)} · {order.buyerCompany || 'Unverified Company'}
+                </p>
+                <p className="text-xs text-gray-500 uppercase mt-1">
+                    Payment: {order.paymentMethod} · {order.isLocalAgent ? "Local/Private Logistics" : "Platform Agent"}
+                </p>
 
                 {/* --- NEW SECTION START --- */}
                 {/* This section shows the detailed confirmation status for deliveries */}
@@ -182,17 +106,16 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
 
             </div>
             <div className="mt-4 space-y-2">
-                {/* All the action buttons remain the same as before */}
-                {user.role === 'seller' && isUser('seller') && order.status === 'AWAITING_AGENT' && (
+                {isSeller && order.status === 'AWAITING_AGENT' && (
                     <button onClick={() => onAssignAgent(order)} className="w-full bg-teal-500 text-gray-900 font-bold py-2 rounded-lg">Assign Agent</button>
                 )}
-                {user.role === 'buyer' && isUser('buyer') && order.status === 'AWAITING_DELIVERY' && !order.buyerConfirmed && (
+                {isBuyer && order.status === 'AWAITING_DELIVERY' && !order.buyerConfirmed && (
                     <button onClick={() => handleConfirm('buyerConfirmDelivery')} className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg">Confirm Delivery</button>
                 )}
-                {user.role === 'agent' && order.status === 'AWAITING_AGENT' && (
+                {user.role === 'agent' && order.status === 'AWAITING_AGENT' && order.hasPendingOfferForAgent && (
                      <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
                 )}
-                {user.role === 'agent' && isUser('agent') && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
+                {user.role === 'agent' && isAssignedAgent && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
                     <button onClick={() => handleConfirm('agentConfirmDelivery')} className="w-full bg-purple-500 text-white font-bold py-2 rounded-lg">Confirm Pickup/Delivery</button>
                 )}
             </div>

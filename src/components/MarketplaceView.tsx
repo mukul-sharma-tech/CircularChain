@@ -113,7 +113,7 @@ import { useEffect, useState } from "react";
 import { useContract } from "@/app/hooks/useContract";
 import { ethers } from "ethers";
 import { motion } from "framer-motion";
-import { useAuth } from "../../context/AuthContext"; // import AuthContext
+import { useAuth } from "../../context/AuthContext";
 
 type Listing = {
   id: bigint;
@@ -126,6 +126,7 @@ type Listing = {
 
 export const MarketplaceView = () => {
   const { readOnlyContract, signedContract } = useContract();
+  const { user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -174,12 +175,17 @@ export const MarketplaceView = () => {
     }
 
     try {
-      const totalPrice = price * BigInt(quantity);
+      const quantityBigInt = BigInt(quantity);
+      const totalPrice = price * quantityBigInt;
+      const buyerName = user.name || "Verified Buyer";
+      const buyerCompany = user.companyName || "Verified Company";
       const tx = await signedContract.createOrder(
         listingId,
-        quantity,
-        "Buyer Name",
-        "Buyer Company",
+        quantityBigInt,
+        buyerName,
+        buyerCompany,
+        0, // PaymentMethod.ETH
+        ethers.ZeroAddress,
         { value: totalPrice }
       );
       await tx.wait();

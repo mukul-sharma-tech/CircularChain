@@ -24,13 +24,17 @@ export async function GET(req: NextRequest) {
 // POST handler for sellers to create an offer
 export async function POST(req: NextRequest) {
     const session = await getIronSession(await cookies(), sessionOptions);
-    if (!session.user || session.user.role !== 'seller') {
-        console.log("Unauthorized access attempt to create offer." + session.user.role);
+    if (!session.user || session.user.role !== 'user') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     
     await dbConnect();
     const offerData = await req.json();
+
+    if (offerData.isLocalAgent) {
+        return NextResponse.json({ message: "Local agent assignments do not require platform offers." }, { status: 400 });
+    }
+
     const newOffer = new Offer({
         ...offerData,
         sellerWallet: session.user.walletAddress,

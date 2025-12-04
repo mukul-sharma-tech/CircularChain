@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         if (!name || !companyName || !role || !addressText) {
             return NextResponse.json({ message: "All fields are required" }, { status: 400 });
         }
-        if (!['seller', 'buyer', 'agent'].includes(role)) {
+        if (!['user', 'agent'].includes(role)) {
             return NextResponse.json({ message: "Invalid role selected" }, { status: 400 });
         }
 
@@ -42,6 +42,9 @@ export async function POST(req: NextRequest) {
         session.user = {
             ...session.user,
             role: updatedUser.role,
+            name: updatedUser.name,
+            companyName: updatedUser.companyName,
+            addressText: updatedUser.addressText,
         };
         await session.save();
 

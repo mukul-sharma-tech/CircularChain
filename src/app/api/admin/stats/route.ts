@@ -85,13 +85,20 @@ export async function GET(req: NextRequest) {
             events.map(async (event) => {
                 const block = await provider.getBlock(event.blockNumber);
                 const args = event.args as any;
+                const orderId = Number(args.orderId);
+                const order = await contract.orders(orderId);
+                const listing = await contract.listings(order.listingId);
                 return {
-                    orderId: args.orderId.toString(),
-                    feeAmount: args.feeAmount.toString(), // <-- FIX #1: Convert feeAmount to string
-                    timestamp: block?.timestamp,
+                    orderId: orderId.toString(),
+                    seller: listing.seller,
+                    buyer: order.buyer,
+                    sellerPayoutWei: args.sellerPayout.toString(),
+                    adminFeeWei: args.adminFee.toString(),
+                    agentFeeWei: args.agentFee.toString(),
+                    timestamp: block?.timestamp ?? 0,
                     blockNumber: event.blockNumber,
-                    seller: args.seller,
-                    buyer: args.buyer,
+                    paymentMethod: Number(order.paymentMethod) === 0 ? 'ETH' : 'FIAT',
+                    isLocalAgent: order.isLocalAgent,
                 };
             })
         );
@@ -99,7 +106,7 @@ export async function GET(req: NextRequest) {
         const sortedHistory = commissionHistory.sort((a, b) => b.timestamp - a.timestamp);
 
         return NextResponse.json({
-            totalEarnings: totalFees.toString(), // <-- FIX #2: Convert totalEarnings to string
+            totalEarningsWei: totalFees.toString(),
             commissionHistory: sortedHistory,
         });
 
