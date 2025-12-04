@@ -54,15 +54,16 @@
 //     }
 // }
 
-import { sessionOptions } from "@/lib/session";
+import { sessionOptions, SessionData } from "@/lib/session";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { ethers, Contract } from "ethers";
+import type { EventLog } from "ethers";
 import { contractABI, contractAddress } from "@/lib/constants";
 
-export async function GET(req: NextRequest) {
-    const session = await getIronSession(await cookies(), sessionOptions);
+export async function GET(_req: NextRequest) {
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
     if (!session.user || session.user.role !== 'admin') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -82,9 +83,16 @@ export async function GET(req: NextRequest) {
         const events = await contract.queryFilter(deliveryCompletedFilter, fromBlock, 'latest'); 
 
         const commissionHistory = await Promise.all(
-            events.map(async (event) => {
+            events
+            .filter((event): event is EventLog => "args" in event)
+            .map(async (event) => {
                 const block = await provider.getBlock(event.blockNumber);
-                const args = event.args as any;
+                const args = event.args as unknown as {
+                    orderId: bigint;
+                    sellerPayout: bigint;
+                    adminFee: bigint;
+                    agentFee: bigint;
+                };
                 const orderId = Number(args.orderId);
                 const order = await contract.orders(orderId);
                 const listing = await contract.listings(order.listingId);

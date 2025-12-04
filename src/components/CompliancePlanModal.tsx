@@ -4,7 +4,7 @@ const CompliancePlanModal = ({
   plan,
   onClose,
 }: {
-  plan: any;
+  plan: Record<string, unknown> | null;
   onClose: () => void;
 }) => {
   // Helper to render each step/section nicely
@@ -15,12 +15,12 @@ const CompliancePlanModal = ({
       <div key={key} className="mb-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
         <h4 className="font-semibold text-teal-400 mb-2 capitalize">{key.replace(/_/g, " ")}</h4>
 
-        {typeof value === "object" && !Array.isArray(value) ? (
+        {value && typeof value === "object" && !Array.isArray(value) ? (
           <ul className="list-disc list-inside text-gray-300">
-            {Object.entries(value).map(([subKey, subValue]) => (
+            {Object.entries(value as Record<string, unknown>).map(([subKey, subValue]) => (
               <li key={subKey}>
                 <span className="font-medium">{subKey.replace(/_/g, " ")}:</span>{" "}
-                {subValue.toString()}
+                {String(subValue)}
               </li>
             ))}
           </ul>
@@ -31,7 +31,7 @@ const CompliancePlanModal = ({
             ))}
           </ul>
         ) : (
-          <p className="text-gray-300">{value.toString()}</p>
+          <p className="text-gray-300">{String(value)}</p>
         )}
       </div>
     ));

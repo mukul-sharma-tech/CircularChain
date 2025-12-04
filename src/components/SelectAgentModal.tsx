@@ -125,7 +125,6 @@ interface AgentProfile {
 }
 
 const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => void; }) => {
-    const { user } = useAuth();
 
     const { signedContract } = useContract();
     const [availableAgents, setAvailableAgents] = useState<AgentProfile[]>([]);
@@ -145,10 +144,10 @@ const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => voi
             try {
                 const response = await fetch('/api/agents/available');
                 if (!response.ok) throw new Error("Failed to fetch agents.");
-                const agents = await response.json();
+                const agents: AgentProfile[] = await response.json();
                 setAvailableAgents(agents);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : String(err));
             } finally {
                 setLoading(false);
             }
@@ -212,9 +211,10 @@ const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => voi
             alert("Offer sent to agent successfully!");
             onClose();
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Failed to send offer:", error);
-            alert(`Error: ${error.message}`);
+            const message = error instanceof Error ? error.message : String(error);
+            alert(`Error: ${message}`);
         } finally {
             setLoading(false);
         }
@@ -236,9 +236,10 @@ const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => voi
             await tx.wait();
             alert("Local/Private agent assigned. Remember to settle logistics offline.");
             onClose();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Failed to assign local agent:", error);
-            alert(error.message || "Failed to assign local agent.");
+            const message = error instanceof Error ? error.message : "Failed to assign local agent.";
+            alert(message);
         } finally {
             setLoading(false);
         }
@@ -276,7 +277,7 @@ const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => voi
                 {useLocalAgent ? (
                     <div className="space-y-4">
                         <div className="bg-gray-900/40 p-4 rounded-lg border border-gray-700">
-                            <p className="text-sm text-gray-300 mb-3">Enter your private driver's wallet address (optional contact note helps your ops team).</p>
+                            <p className="text-sm text-gray-300 mb-3">Enter your private driver&apos;s wallet address (optional contact note helps your ops team).</p>
                             <input
                                 value={localAgentWallet}
                                 onChange={e => setLocalAgentWallet(e.target.value)}

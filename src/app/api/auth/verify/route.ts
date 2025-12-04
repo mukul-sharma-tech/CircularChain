@@ -56,7 +56,7 @@
 // }
 
 
-import { sessionOptions } from "@/lib/session";
+import { sessionOptions, SessionData } from "@/lib/session";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/UserModel";
 import { getIronSession } from "iron-session";
@@ -65,7 +65,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SiweMessage } from "siwe";
 
 export async function POST(req: NextRequest) {
-  const session = await getIronSession(cookies(), sessionOptions);
+  const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
   try {
     const { message, signature } = await req.json();

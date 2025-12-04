@@ -1,11 +1,17 @@
 "use client";
 
-import { useAuth } from "../../context/AuthContext";
 import React, { useState } from "react";
 
-// We need to update our AuthContext to accept a function to refresh the user state
 interface ProfileSetupProps {
-    onProfileComplete: (updatedUser: any) => void;
+    onProfileComplete: (updatedUser: {
+        walletAddress: string;
+        role: 'user' | 'agent' | 'admin';
+        isLoggedIn: boolean;
+        name?: string;
+        companyName?: string;
+        addressText?: string;
+        isAvailable?: boolean;
+    }) => void;
 }
 
 const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
@@ -39,8 +45,8 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
             const updatedUser = await response.json();
             onProfileComplete(updatedUser); // Notify the parent/context to update the user state
 
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : String(err));
         }
     };
 
@@ -56,10 +62,10 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                 <div>
                     <p>Select your role:</p>
                     <label>
-                        <input type="radio" name="role" value="user" onChange={e => setRole('user')} checked={role === 'user'} /> Industry (Prosumer)
+                        <input type="radio" name="role" value="user" onChange={_e => setRole('user')} checked={role === 'user'} /> Industry (Prosumer)
                     </label>
                     <label style={{ marginLeft: '1rem' }}>
-                        <input type="radio" name="role" value="agent" onChange={e => setRole('agent')} checked={role === 'agent'} /> Logistics Agent
+                        <input type="radio" name="role" value="agent" onChange={_e => setRole('agent')} checked={role === 'agent'} /> Logistics Agent
                     </label>
                 </div>
                 

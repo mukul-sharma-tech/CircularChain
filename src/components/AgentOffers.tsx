@@ -7,7 +7,7 @@ import { IOffer } from "@/models/OfferModel";
 
 export const AgentOffers = () => {
     const [offers, setOffers] = useState<IOffer[]>([]);
-    const [selectedPlan, setSelectedPlan] = useState<any | null>(null);
+    const [selectedPlan, setSelectedPlan] = useState<Record<string, unknown> | null>(null);
     const { signedContract } = useContract();
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export const AgentOffers = () => {
     return (
         <div className="space-y-4">
             {offers.map(offer => (
-                <div key={offer._id} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                <div key={offer.orderId} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
                     <h4 className="font-bold">Offer for Order #{offer.orderId}</h4>
                     <p className="text-sm text-gray-300">{offer.wasteMaterial}</p>
                     <p className="text-xs text-gray-400">{offer.originLocation} to {offer.destinationLocation}</p>
@@ -58,7 +58,7 @@ export const AgentOffers = () => {
                         Logistics Type: {offer.isLocalAgent ? "Local / Offline (No payout)" : "Platform Agent (5% fee)"}
                     </p>
                     <div className="mt-4 flex gap-4 items-center">
-                        <button onClick={() => setSelectedPlan(offer.compliancePlan)} className="text-sm font-semibold text-teal-400 hover:underline">View Compliance Plan</button>
+                        <button onClick={() => setSelectedPlan(offer.compliancePlan as unknown as Record<string, unknown>)} className="text-sm font-semibold text-teal-400 hover:underline">View Compliance Plan</button>
                         <button onClick={() => handleAccept(offer.orderId)} className="text-sm font-semibold bg-green-600 px-3 py-1 rounded text-white">Accept On-Chain</button>
                     </div>
                 </div>

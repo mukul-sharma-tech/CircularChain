@@ -1,12 +1,12 @@
-import { sessionOptions } from "@/lib/session";
+import { sessionOptions, SessionData } from "@/lib/session";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/UserModel";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-    const session = await getIronSession(await cookies(), sessionOptions);
+export async function POST(_req: NextRequest) {
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
     if (!session.user || session.user.role !== 'agent') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ isAvailable: agent.isAvailable });
 
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }
