@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import type { EventLog } from 'ethers';
 import { useContract } from './useContract';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -25,8 +26,8 @@ export const useUserEarnings = () => {
         const userAddress = user.walletAddress.toLowerCase();
         let earnings = 0n;
 
-        for (const event of events) {
-            if(!event.args) continue
+        for (const event of events.filter((e): e is EventLog => "args" in e)) {
+            if (!event.args) continue;
 
             const order = await readOnlyContract.orders(event.args.orderId);
             const listing = await readOnlyContract.listings(order.listingId);

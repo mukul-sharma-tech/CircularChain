@@ -3,9 +3,16 @@
 import { useAuth } from "../../context/AuthContext";
 import React, { useState } from "react";
 
-// We need to update our AuthContext to accept a function to refresh the user state
 interface ProfileSetupProps {
-    onProfileComplete: (updatedUser: any) => void;
+    onProfileComplete: (updatedUser: {
+        walletAddress: string;
+        role: 'user' | 'agent' | 'admin';
+        isLoggedIn: boolean;
+        name?: string;
+        companyName?: string;
+        addressText?: string;
+        isAvailable?: boolean;
+    }) => void;
 }
 
 const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
@@ -39,8 +46,8 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
             const updatedUser = await response.json();
             onProfileComplete(updatedUser); // Notify the parent/context to update the user state
 
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : String(err));
         }
     };
 

@@ -33,10 +33,10 @@ export const AdminPanel = () => {
                 if (!response.ok) {
                     throw new Error(`Failed to fetch stats: ${response.statusText}`);
                 }
-                const data = await response.json();
+                const data: AdminStats = await response.json();
                 setStats(data);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : String(err));
             } finally {
                 setLoading(false);
             }

@@ -2,7 +2,8 @@
 
 import { useAuth } from "../../../context/AuthContext";
 import { contractABI, contractAddress } from "@/lib/constants";
-import { ethers, BrowserProvider, Contract, Signer } from "ethers";
+import { BrowserProvider, Contract, Signer } from "ethers";
+import type { Eip1193Provider } from "ethers";
 import { useEffect, useState } from "react";
 
 // This hook provides an easy way to get a read-only or signed contract instance
@@ -13,12 +14,17 @@ export const useContract = () => {
 
     useEffect(() => {
         const setupContracts = async () => {
-            if (typeof window === 'undefined' || !(window as any).ethereum) {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            const ethProvider = (window as Window & { ethereum?: Eip1193Provider }).ethereum;
+            if (!ethProvider) {
                 console.log("MetaMask is not installed.");
                 return;
             }
 
-            const provider = new BrowserProvider((window as any).ethereum);
+            const provider = new BrowserProvider(ethProvider);
             
             // Always create a read-only contract instance
             const readOnlyInstance = new Contract(contractAddress, contractABI, provider);

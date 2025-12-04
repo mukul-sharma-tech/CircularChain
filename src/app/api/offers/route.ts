@@ -1,4 +1,4 @@
-import { sessionOptions } from "@/lib/session";
+import { sessionOptions, SessionData } from "@/lib/session";
 import dbConnect from "@/lib/dbConnect";
 import Offer from "@/models/OfferModel";
 import { getIronSession } from "iron-session";
@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // GET handler for agents to fetch their pending offers
 export async function GET(req: NextRequest) {
-    const session = await getIronSession(await cookies(), sessionOptions);
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     if (!session.user || session.user.role !== 'agent') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
 // POST handler for sellers to create an offer
 export async function POST(req: NextRequest) {
-    const session = await getIronSession(await cookies(), sessionOptions);
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     if (!session.user || session.user.role !== 'user') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
 // PUT handler for agents to update an offer's status (e.g., to 'accepted')
 export async function PUT(req: NextRequest) {
-    const session = await getIronSession(await cookies(), sessionOptions);
+    const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     if (!session.user || session.user.role !== 'agent') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
