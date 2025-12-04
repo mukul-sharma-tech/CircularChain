@@ -56,7 +56,13 @@ export const useOrders = () => {
                 const nextOrderId = await readOnlyContract.nextOrderId();
                 const listingsMap = new Map<bigint, { name: string; seller: string }>();
 
-                const nextListingId = await readOnlyContract.nextListingId();
+                let nextListingId: bigint;
+                try {
+                    nextListingId = await readOnlyContract.nextListingId();
+                } catch (error) {
+                    console.warn("Failed to fetch nextListingId, defaulting to 0:", error);
+                    nextListingId = 0n;
+                }
                 for (let i = 1; i < Number(nextListingId); i++) {
                     const listing = await readOnlyContract.listings(i);
                     listingsMap.set(listing.id, { name: listing.name, seller: listing.seller });
