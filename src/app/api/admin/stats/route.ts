@@ -62,7 +62,7 @@ import { ethers, Contract } from "ethers";
 import type { EventLog } from "ethers";
 import { contractABI, contractAddress } from "@/lib/constants";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
     if (!session.user || session.user.role !== 'admin') {

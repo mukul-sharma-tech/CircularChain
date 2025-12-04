@@ -13,7 +13,7 @@ export async function GET() {
 
         return NextResponse.json(availableAgents);
 
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }

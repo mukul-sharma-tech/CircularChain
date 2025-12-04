@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server"; // <-- Import NextRequest
 
 // Add the 'request' parameter here to ensure dynamic rendering
-export async function GET(request: NextRequest) { 
+export async function GET(_request: NextRequest) { 
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
     if (!session.user || !session.user.isLoggedIn) {

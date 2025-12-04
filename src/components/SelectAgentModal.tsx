@@ -125,7 +125,6 @@ interface AgentProfile {
 }
 
 const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => void; }) => {
-    const { user } = useAuth();
 
     const { signedContract } = useContract();
     const [availableAgents, setAvailableAgents] = useState<AgentProfile[]>([]);

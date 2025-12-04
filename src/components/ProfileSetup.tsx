@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "../../context/AuthContext";
 import React, { useState } from "react";
 
 interface ProfileSetupProps {
@@ -63,10 +62,10 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                 <div>
                     <p>Select your role:</p>
                     <label>
-                        <input type="radio" name="role" value="user" onChange={e => setRole('user')} checked={role === 'user'} /> Industry (Prosumer)
+                        <input type="radio" name="role" value="user" onChange={_e => setRole('user')} checked={role === 'user'} /> Industry (Prosumer)
                     </label>
                     <label style={{ marginLeft: '1rem' }}>
-                        <input type="radio" name="role" value="agent" onChange={e => setRole('agent')} checked={role === 'agent'} /> Logistics Agent
+                        <input type="radio" name="role" value="agent" onChange={_e => setRole('agent')} checked={role === 'agent'} /> Logistics Agent
                     </label>
                 </div>
                 

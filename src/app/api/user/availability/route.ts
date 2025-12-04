@@ -5,7 +5,7 @@ import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
 
     if (!session.user || session.user.role !== 'agent') {
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ isAvailable: agent.isAvailable });
 
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }
