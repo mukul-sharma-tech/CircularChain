@@ -107,8 +107,8 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.2, duration: 0.8 }}
-            className="relative z-10"
-            style={{ marginTop: '40px' }}
+            className="relative z-10 flex justify-center items-center w-full"
+            style={{ marginTop: "40px" }}
           >
             <LoginButton />
           </motion.div>
