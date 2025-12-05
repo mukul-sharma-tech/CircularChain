@@ -135,7 +135,16 @@ export const MarketplaceView = () => {
     const fetchListings = async () => {
       if (!readOnlyContract) return;
       try {
-        const nextId = await readOnlyContract.nextListingId();
+        let nextId: bigint;
+        try {
+          nextId = await readOnlyContract.nextListingId();
+        } catch (error) {
+          console.warn("Failed to fetch nextListingId, defaulting to 0:", error);
+          setError("Unable to connect to contract. Please check your network connection.");
+          setListings([]);
+          setLoading(false);
+          return;
+        }
         const allListings: Listing[] = [];
 
         for (let i = 1; i < Number(nextId); i++) {
