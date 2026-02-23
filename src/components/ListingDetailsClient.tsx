@@ -37,14 +37,6 @@ interface Order {
   status: number;
 }
 
-interface ReviewSubmittedEvent {
-  listingId: bigint;
-  orderId: bigint;
-  reviewer: string;
-  rating: bigint;
-  review: string;
-}
-
 interface ReviewData {
   rating: bigint;
   review: string;

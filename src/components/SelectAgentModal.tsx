@@ -101,7 +101,6 @@ import { useContract } from "@/app/hooks/useContract";
 import { Order } from "@/app/hooks/useOrders";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 
 
 // The real, external API for generating compliance plans

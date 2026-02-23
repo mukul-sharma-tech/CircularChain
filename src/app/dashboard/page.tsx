@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   const [view, setView] = useState<"marketplace" | "orders" | "circular-sag" | "waste-compliance">("marketplace");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const { totalEarnings, loading: earningsLoading } = useUserEarnings();
+  const { totalEarnings } = useUserEarnings();
 
   useEffect(() => {
     const viewParam = searchParams.get("view");
@@ -82,7 +82,7 @@ export default function DashboardPage() {
   }
 
   // Seller / Buyer Dashboard
-  const renderContent = () => {
+  const renderContent = (): React.ReactElement => {
     if (view === "marketplace") {
       return (
         <div className="space-y-8">
@@ -139,7 +139,7 @@ export default function DashboardPage() {
           ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setView(tab.key as any)}
+              onClick={() => setView(tab.key as "marketplace" | "orders" | "circular-sag" | "waste-compliance")}
               className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${view === tab.key
                 ? "bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20"
                 : "text-slate-400 hover:text-white hover:bg-white/5"

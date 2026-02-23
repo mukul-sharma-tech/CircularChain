@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET handler for agents to fetch their pending offers
-export async function GET(_req: NextRequest) {
+export async function GET() {
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     if (!session.user || session.user.role !== 'agent') {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -71,7 +71,7 @@ export async function PUT(req: NextRequest) {
         }
 
         return NextResponse.json(updatedOffer);
-    } catch (_error) {
+    } catch {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }

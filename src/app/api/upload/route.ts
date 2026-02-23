@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
 
   const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!;
   const privateKey = process.env.IMAGEKIT_PRIVATE_KEY!;
-  const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!;
 
   const token = Math.random().toString(36).substring(2);
   const expire = Math.floor(Date.now() / 1000) + 3600; // 1 hour

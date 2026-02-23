@@ -567,13 +567,6 @@ export default function CircularSagePage() {
     showStatus("Chat display cleared", "info");
   };
 
-  const exampleQueries: string[] = [
-    "What are the best business opportunities in textile waste recycling in India?",
-    "How much investment is needed to start a shoddy yarn manufacturing business?",
-    "What is the current market price for textile scraps in Delhi?",
-    "Can you suggest some high-value applications for denim waste?",
-  ];
-
   return (
     <div className="bg-transparent text-slate-100">
       <div className="container mx-auto max-w-7xl">
