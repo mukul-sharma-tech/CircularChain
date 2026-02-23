@@ -1,7 +1,7 @@
 import ListingDetailsClient from "@/components/ListingDetailsClient";
 
-export default function ListingPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function ListingPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   // Expect slug of form name-id
   const parts = slug.split("-");
   const idPart = parts[parts.length - 1];

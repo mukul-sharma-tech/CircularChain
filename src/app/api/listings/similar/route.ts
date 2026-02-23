@@ -43,19 +43,32 @@ export async function GET(request: NextRequest) {
         
         let score = 0;
         
-        // Check for common words
+        // Check for exact word matches (highest priority)
         currentWords.forEach(word => {
           if (listingWords.includes(word)) {
             score += 10;
-            console.log(`Match found: "${word}" in "${listing.name}"`);
+            console.log(`Exact match: "${word}" in "${listing.name}"`);
           }
         });
         
-        // Check if any word from current listing appears in the other listing
+        // Check if any word from current listing appears as substring in the other listing
         currentWords.forEach(word => {
-          if (listingNameLower.includes(word)) {
+          if (listingNameLower.includes(word) && !listingWords.includes(word)) {
             score += 5;
+            console.log(`Substring match: "${word}" in "${listing.name}"`);
           }
+        });
+
+        // Check for partial matches (e.g., "wood" matches "wooden")
+        listingWords.forEach(listingWord => {
+          currentWords.forEach(currentWord => {
+            if (listingWord.includes(currentWord) || currentWord.includes(listingWord)) {
+              if (listingWord !== currentWord) {
+                score += 3;
+                console.log(`Partial match: "${currentWord}" ~ "${listingWord}" in "${listing.name}"`);
+              }
+            }
+          });
         });
         
         console.log(`Listing "${listing.name}" scored: ${score}`);

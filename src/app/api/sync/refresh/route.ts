@@ -119,6 +119,12 @@ export async function POST(req: NextRequest) {
         if (type === 'listing') {
             const listingOnChain = await contract.listings(numericId);
 
+            console.log(`Syncing listing ${numericId}:`, {
+                id: listingOnChain.id?.toString(),
+                name: listingOnChain.name,
+                companyName: listingOnChain.companyName
+            });
+
             // Try to fetch the images via the helper (public mapping getters often omit arrays)
             let imageHashes: string[] = [];
             try {
@@ -132,35 +138,32 @@ export async function POST(req: NextRequest) {
                 // Do not attempt to access listingOnChain.imageHashes directly (may trigger decoding errors)
             }
 
+            const listingData = {
+                listingId: numericId, // Use the passed ID
+                name: listingOnChain.name || 'Unknown',
+                companyName: listingOnChain.companyName || 'Unknown Company',
+                seller: String(listingOnChain.seller).toLowerCase(),
+                pricePerUnit: listingOnChain.pricePerUnit.toString(),
+                quantityAvailable: Number(listingOnChain.quantityAvailable),
+                isActive: listingOnChain.isActive,
+                dataHash: listingOnChain.dataHash || '',
+                imageHashes,
+                updatedAt: new Date()
+            };
+
+            console.log('Saving listing data:', listingData);
+
             const updated = await Listing.findOneAndUpdate(
                 { listingId: numericId },
-                {
-                    listingId: Number(listingOnChain.id),
-
-                    name: listingOnChain.name,
-                    companyName: listingOnChain.companyName,
-
-                    seller: String(listingOnChain.seller).toLowerCase(),
-
-                    // 🔥 EXACT Solidity fields
-                    pricePerUnit: listingOnChain.pricePerUnit.toString(),
-                    quantityAvailable: Number(listingOnChain.quantityAvailable),
-
-                    isActive: listingOnChain.isActive,
-
-                    dataHash: listingOnChain.dataHash,
-
-                    // Store images into the model's `imageHashes` field
-                    imageHashes,
-
-                    updatedAt: new Date()
-                },
+                listingData,
                 {
                     upsert: true,
                     new: true,
                     setDefaultsOnInsert: true
                 }
             );
+
+            console.log('Saved listing:', updated);
 
             return NextResponse.json({
                 message: 'Listing synced successfully',

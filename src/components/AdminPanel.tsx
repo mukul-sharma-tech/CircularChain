@@ -25,6 +25,9 @@ export const AdminPanel = () => {
     const [stats, setStats] = useState<AdminStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [syncing, setSyncing] = useState(false);
+    const [syncMessage, setSyncMessage] = useState('');
+    const [dbListings, setDbListings] = useState<Array<{listingId: number; name: string; companyName: string}>>([]);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -43,6 +46,40 @@ export const AdminPanel = () => {
         };
         fetchStats();
     }, []);
+
+    const handleSyncAll = async () => {
+        setSyncing(true);
+        setSyncMessage('');
+        try {
+            const response = await fetch('/api/admin/sync-all', {
+                method: 'POST',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setSyncMessage(`✅ Synced ${data.synced} listings successfully! (${data.failed} failed)`);
+                // Refresh the DB check
+                checkDatabase();
+            } else {
+                setSyncMessage(`❌ Sync failed: ${data.message}`);
+            }
+        } catch (err) {
+            setSyncMessage(`❌ Error: ${err instanceof Error ? err.message : String(err)}`);
+        } finally {
+            setSyncing(false);
+        }
+    };
+
+    const checkDatabase = async () => {
+        try {
+            const response = await fetch('/api/admin/check-db');
+            const data = await response.json();
+            if (response.ok) {
+                setDbListings(data.listings || []);
+            }
+        } catch (err) {
+            console.error('Failed to check database:', err);
+        }
+    };
 
     if (loading) return <p className="text-center mt-8">Loading admin data...</p>;
     if (error) return <p className="text-center mt-8 text-red-500">Error: {error}</p>;
@@ -89,6 +126,50 @@ export const AdminPanel = () => {
         //     </div>
         // </div>
         <div className="space-y-8">
+            {/* Sync Button */}
+            <motion.div
+                className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl border border-gray-700"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+            >
+                <h3 className="text-lg font-semibold text-white mb-3">Database Sync</h3>
+                <p className="text-sm text-gray-400 mb-4">
+                    Sync all blockchain listings to the database for recommendations and search.
+                </p>
+                <div className="flex gap-3">
+                    <button
+                        onClick={handleSyncAll}
+                        disabled={syncing}
+                        className="bg-teal-500 hover:bg-teal-400 disabled:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-all"
+                    >
+                        {syncing ? 'Syncing...' : 'Sync All Listings'}
+                    </button>
+                    <button
+                        onClick={checkDatabase}
+                        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-lg transition-all"
+                    >
+                        Check Database
+                    </button>
+                </div>
+                {syncMessage && (
+                    <p className={`mt-3 text-sm ${syncMessage.startsWith('✅') ? 'text-green-400' : 'text-red-400'}`}>
+                        {syncMessage}
+                    </p>
+                )}
+                {dbListings.length > 0 && (
+                    <div className="mt-4 p-4 bg-gray-900/50 rounded-lg max-h-60 overflow-y-auto">
+                        <h4 className="text-sm font-semibold text-white mb-2">Database Listings ({dbListings.length}):</h4>
+                        <div className="space-y-2">
+                            {dbListings.map((listing) => (
+                                <div key={listing.listingId} className="text-xs text-gray-300">
+                                    <span className="text-teal-400">#{listing.listingId}</span> - {listing.name} ({listing.companyName})
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </motion.div>
+
             {/* Total Earnings Card */}
             <motion.div
                 className="bg-gray-800/50 backdrop-blur-md p-8 rounded-xl border border-teal-500/40 text-center shadow-lg"
