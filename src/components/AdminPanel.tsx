@@ -98,7 +98,8 @@ export const AdminPanel = () => {
             >
                 <h3 className="text-xl font-semibold text-teal-400 mb-2">Total Platform Earnings</h3>
                 <p className="text-4xl font-bold text-white">
-                    {ethers.formatEther(BigInt(stats.totalEarningsWei))} ETH
+                    {/* {ethers.formatEther(BigInt(stats.totalEarningsWei))} ETH */}
+                    ₹ {(Number(ethers.formatEther(stats.totalEarningsWei)) * 100000).toFixed(2)}
                 </p>
             </motion.div>
 

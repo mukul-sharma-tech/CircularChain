@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CircularSage – Simple Client</title>
+  <style>
+    :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22d3ee}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#0f172a 25%,#0b1220);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:100%;max-width:900px;background:rgba(17,24,39,.75);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.06);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.4);overflow:hidden}
+    .header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 16px var(--accent)}
+    h1{font-size:20px;margin:0;letter-spacing:.2px}
+    .muted{color:var(--muted);font-size:14px}
+    form{padding:20px 24px;display:grid;gap:12px}
+    textarea{width:100%;min-height:110px;resize:vertical;background:#0b1020;color:var(--text);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;line-height:1.4}
+    .row{display:flex;gap:10px;align-items:center}
+    input[type="text"]{flex:1;min-width:220px;background:#0b1020;color:var(--text);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px}
+    button{appearance:none;border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#0b1020;font-weight:600;cursor:pointer}
+    button[disabled]{opacity:.6;cursor:not-allowed}
+    .result{padding:0 24px 22px}
+    .panel{background:#0b1020;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;line-height:1.6}
+    .panel h2, .panel h3{color:var(--accent);margin-top:1em;margin-bottom:.5em}
+    .panel ul{padding-left:20px;margin:0.5em 0}
+    .panel li{margin:0.3em 0}
+    .panel strong{color:#fff}
+    .small{font-size:12px}
+    .footer{padding:14px 24px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    a{color:var(--accent);text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="dot" aria-hidden="true"></div>
+      <h1>CircularSage Demo</h1>
+      <div class="muted">Ask business ideas for the circular economy</div>
+    </div>
+
+    <form id="ask-form">
+      <label class="muted small" for="apiBase">API base URL (keep default if Flask runs on your machine)</label>
+      <div class="row">
+        <input id="apiBase" type="text" value="http://localhost:5000" />
+        <button id="sendBtn" type="submit">Ask Sage</button>
+      </div>
+
+      <label class="muted small" for="query">Your question</label>
+      <textarea id="query" placeholder="e.g., Suggest 3 textile-waste business ideas for Delhi NCR with rough costs."></textarea>
+
+      <div class="muted small">Tip: Press Ctrl/⌘+Enter to send.</div>
+    </form>
+
+    <div class="result">
+      <div class="panel" id="answer" aria-live="polite">The answer will appear here.</div>
+    </div>
+
+    <div class="footer">
+      <div class="muted small">Backend endpoint: <code>/api/ask-sage</code></div>
+      <div class="muted small">CORS must be enabled on the Flask server (already done in your code).</div>
+    </div>
+  </div>
+
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script>
+    const form = document.getElementById('ask-form');
+    const queryEl = document.getElementById('query');
+    const answerEl = document.getElementById('answer');
+    const sendBtn = document.getElementById('sendBtn');
+    const apiBaseEl = document.getElementById('apiBase');
+
+    function setLoading(isLoading){
+      sendBtn.disabled = isLoading;
+      sendBtn.innerHTML = isLoading ? 'Thinking… <span class="spinner"></span>' : 'Ask Sage';
+    }
+
+    async function askSage(){
+      const apiBase = apiBaseEl.value.replace(/\/?$/,'');
+      const url = apiBase + '/api/ask-sage';
+      const query = queryEl.value.trim();
+      if(!query){
+        answerEl.textContent = 'Please enter a question.';
+        return;
+      }
+      setLoading(true);
+      answerEl.textContent = 'Awaiting response…';
+      try{
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        if(!res.ok){
+          throw new Error(data.error || ('HTTP '+res.status));
+        }
+        // Render Markdown response
+        answerEl.innerHTML = marked.parse(data.answer || '(No answer)');
+      }catch(err){
+        answerEl.textContent = 'Error: ' + err.message + '\n\nCheck that your Flask server is running and CORS is enabled.';
+      }finally{
+        setLoading(false);
+      }
+    }
+
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); askSage(); });
+    queryEl.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); askSage(); }
+    });
+  </script>
+</body>
+</html>

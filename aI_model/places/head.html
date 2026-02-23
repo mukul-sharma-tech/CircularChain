@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generate Compliance Plan - Test Page</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Roboto, 'Segoe UI', Arial; max-width:900px; margin:32px auto; padding:16px; }
+    header { display:flex; align-items:center; gap:12px; }
+    h1 { margin:0; font-size:1.4rem; }
+    label { display:block; margin-top:12px; font-weight:600; }
+    input[type=text], textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-size:1rem; }
+    button { margin-top:12px; padding:10px 14px; border-radius:8px; border:0; background:#2563eb; color:white; font-weight:600; cursor:pointer; }
+    button:disabled { opacity:0.6; cursor:not-allowed }
+    pre { background:#0b1220; color:#e6eef8; padding:12px; border-radius:8px; overflow:auto; max-height:420px; }
+    .meta { color:#555; margin-top:4px; font-size:0.9rem }
+    .row { display:flex; gap:8px; align-items:center }
+    .small { font-size:0.9rem }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Test: /generate_plan</h1>
+  </header>
+
+  <p class="meta">This page sends a POST request to <code>/generate_plan</code> on the host you open the page from (use <code>http://localhost:5000/generate_plan</code> when running the Flask app locally).</p>
+
+  <label for="waste">Waste material</label>
+  <input id="waste" type="text" value="Sulphuric Acid" />
+
+  <label for="location">Transport location</label>
+  <input id="location" type="text" value="Jamshedpur to Jharkhand, India" />
+
+  <div class="row">
+    <button id="submit">Generate Plan</button>
+    <button id="example" class="small">Load Example: Uranium Particles</button>
+    <div id="status" class="small" style="margin-left:8px"></div>
+  </div>
+
+  <label style="margin-top:16px">Response (JSON)</label>
+  <pre id="output">No request made yet.</pre>
+
+  <script>
+    const submit = document.getElementById('submit')
+    const example = document.getElementById('example')
+    const wasteEl = document.getElementById('waste')
+    const locationEl = document.getElementById('location')
+    const output = document.getElementById('output')
+    const status = document.getElementById('status')
+
+    function setStatus(text) {
+      status.textContent = text
+    }
+
+    example.addEventListener('click', () => {
+      wasteEl.value = 'Uranium Particles'
+      locationEl.value = 'Jamshedpur to Hyderabad, India'
+    })
+
+    submit.addEventListener('click', async () => {
+      const waste = wasteEl.value.trim()
+      const location = locationEl.value.trim()
+      if (!waste || !location) {
+        alert('Please fill both fields')
+        return
+      }
+
+      submit.disabled = true
+      setStatus('Sending...')
+      output.textContent = 'Waiting for response...'
+
+      // Default to current origin + /generate_plan so opening the file from same host will work.
+      // If you run Flask on http://localhost:5000, change baseUrl to that.
+      const baseUrl = window.location.origin === 'null' || window.location.origin === 'file://' ? 'http://127.0.0.1:5000' : window.location.origin
+      const url = baseUrl + '/generate_plan'
+
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ waste, location })
+        })
+
+        const data = await resp.json()
+        if (!resp.ok) {
+          output.textContent = 'HTTP ' + resp.status + '\n' + JSON.stringify(data, null, 2)
+        } else {
+          output.textContent = JSON.stringify(data, null, 2)
+        }
+        setStatus('Done (' + resp.status + ')')
+      } catch (err) {
+        output.textContent = 'Request failed:\n' + err.toString()
+        setStatus('Error')
+      } finally {
+        submit.disabled = false
+      }
+    })
+  </script>
+
+  <hr style="margin-top:28px" />
+  <p class="meta">Notes:
+    <ul>
+      <li>If you saved this file and open it directly (file://) the script assumes your Flask server is at <code>http://127.0.0.1:5000</code>. Change <code>baseUrl</code> in the script if needed.</li>
+      <li>Make sure your Flask app has CORS enabled (the example uses <code>flask-cors</code>).</li>
+      <li>Open browser DevTools &rarr; Network to inspect the request/response for debugging.</li>
+    </ul>
+  </p>
+</body>
+</html>

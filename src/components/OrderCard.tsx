@@ -8,9 +8,11 @@ import { ethers } from "ethers";
 interface OrderCardProps {
     order: Order;
     onAssignAgent: (order: Order) => void;
+    // Optional callback to allow parent to refetch orders after state changes
+    onRefetch?: () => void;
 }
 
-export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
+export const OrderCard = ({ order, onAssignAgent, onRefetch }: OrderCardProps) => {
     const { user } = useAuth();
     const { signedContract } = useContract();
 
@@ -20,21 +22,35 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
         try {
             const tx = await signedContract[funcName](order.id);
             await tx.wait();
+
+            // Update MongoDB via API
+            const type = funcName === 'buyerConfirmDelivery' ? 'buyer' : 'agent';
+            const response = await fetch('/api/orders/update-confirmation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: Number(order.id), type, confirmed: true })
+            });
+
+            if (!response.ok) {
+                console.warn('Failed to update MongoDB, but blockchain transaction succeeded');
+            }
+
             alert("Confirmation successful! The order list will refresh.");
-            window.location.reload(); // Simple refresh for now
+            // Add a small delay to ensure blockchain state is updated
+            setTimeout(() => onRefetch?.(), 2000);
         } catch (error) {
             console.error("Confirmation failed:", error);
             alert("Confirmation failed.");
         }
     };
-    
+
     const handleAcceptOffer = async () => {
         if (!signedContract) return alert("Wallet not connected.");
         try {
             const tx = await signedContract.acceptAgentOffer(order.id);
             await tx.wait();
             alert("Offer accepted! You are now assigned to this order.");
-            window.location.reload();
+            setTimeout(() => onRefetch?.(), 2000);
         } catch (error) {
             console.error("Failed to accept offer:", error);
             alert("Failed to accept offer.");
@@ -65,7 +81,7 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
     };
 
     return (
-        <div className="bg-gray-800/40 backdrop-blur-sm p-5 rounded-xl border border-gray-700 flex flex-col justify-between">
+        <div className="glass-card p-6 rounded-3xl flex flex-col justify-between hover:border-teal-500/30 transition-all">
             <div>
                 <div className="flex justify-between items-start mb-2">
                     <h4 className="font-bold text-lg text-white">Order #{String(order.id)}</h4>
@@ -93,13 +109,16 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
                             Agent Confirmed
                         </p>
                         <p className={`flex items-center font-semibold ${order.buyerConfirmed ? "text-green-400" : "text-gray-400"}`}>
-                           {order.buyerConfirmed ? (
+                            {order.buyerConfirmed ? (
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                             ) : (
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" /></svg>
                             )}
                             Buyer Confirmed
                         </p>
+                        {typeof order.deliveryStatus !== 'undefined' && (
+                            <p className="text-xs text-gray-400 mt-1">Delivery Progress: <span className="text-sm font-semibold text-white">{['NotStarted', 'PickedUp', 'InTransit', 'Weighment', 'Delivered'][order.deliveryStatus || 0]}</span></p>
+                        )}
                     </div>
                 )}
                 {/* --- NEW SECTION END --- */}
@@ -113,10 +132,51 @@ export const OrderCard = ({ order, onAssignAgent }: OrderCardProps) => {
                     <button onClick={() => handleConfirm('buyerConfirmDelivery')} className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg">Confirm Delivery</button>
                 )}
                 {user.role === 'agent' && order.status === 'AWAITING_AGENT' && order.hasPendingOfferForAgent && (
-                     <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
+                    <button onClick={handleAcceptOffer} className="w-full bg-green-500 text-white font-bold py-2 rounded-lg">Accept Offer</button>
                 )}
                 {user.role === 'agent' && isAssignedAgent && order.status === 'AWAITING_DELIVERY' && !order.agentConfirmed && (
                     <button onClick={() => handleConfirm('agentConfirmDelivery')} className="w-full bg-purple-500 text-white font-bold py-2 rounded-lg">Confirm Pickup/Delivery</button>
+                )}
+
+                {/* Delivery status update for assigned agent */}
+                {user.role === 'agent' && isAssignedAgent && order.status === 'AWAITING_DELIVERY' && (
+                    <div className="mt-2">
+                        <label className="text-xs text-gray-400">Update Delivery Status</label>
+                        <div className="flex gap-2 mt-1">
+                            <select id={`ds-${String(order.id)}`} className="p-2 bg-gray-800 rounded text-sm">
+                                <option value="1">PickedUp</option>
+                                <option value="2">InTransit</option>
+                                <option value="3">Weighment</option>
+                            </select>
+                            <button onClick={async () => {
+                                const sel = document.getElementById(`ds-${String(order.id)}`) as HTMLSelectElement | null;
+                                if (!sel) return;
+                                const val = Number(sel.value);
+                                try {
+                                    if (!signedContract) return alert("Connect wallet");
+                                    const tx = await signedContract.updateDeliveryStatus(order.id, val);
+                                    await tx.wait();
+
+                                    // Update MongoDB via API
+                                    const response = await fetch('/api/orders/update-status', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ orderId: Number(order.id), deliveryStatus: val })
+                                    });
+
+                                    if (!response.ok) {
+                                        console.warn('Failed to update MongoDB, but blockchain transaction succeeded');
+                                    }
+
+                                    alert('Delivery status updated');
+                                    setTimeout(() => onRefetch?.(), 2000);
+                                } catch (err) {
+                                    console.error(err);
+                                    alert('Failed to update status');
+                                }
+                            }} className="bg-gray-700 text-white px-3 py-2 rounded">Update</button>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

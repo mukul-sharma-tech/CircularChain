@@ -219,6 +219,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const nonceRes = await fetch(`/api/auth/nonce?address=${address}`);
             const nonce = await nonceRes.text();
 
+            // Ensure a user record exists in the database for this address (signup/upsert)
+            try {
+                await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, nonce }),
+                });
+            } catch (signupErr) {
+                // Don't block login on signup failure, but log so we can debug
+                console.warn('Signup endpoint failed:', signupErr);
+            }
+
             // Create the full SIWE message
             const message = new SiweMessage({
                 domain: window.location.host,
@@ -241,7 +253,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
 
             if (!verifyRes.ok) {
-                throw new Error("Verification failed");
+                // Forward the server's error message if available so callers can display it
+                const errorBody = await verifyRes.json().catch(() => null);
+                throw new Error(errorBody?.message || 'Verification failed');
             }
 
             const userData = await verifyRes.json();
@@ -250,6 +264,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         } catch (error) {
             console.error("Login failed:", error);
+            if (error instanceof Error) {
+                // Surface the backend message to the user
+                alert(error.message);
+            }
             setUser({ isLoggedIn: false }); // Reset on failure
             return undefined; // Return undefined on failure
         } finally {

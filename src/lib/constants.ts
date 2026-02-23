@@ -118,6 +118,12 @@ export const contractABI = [
                 "internalType": "uint256",
                 "name": "agentFee",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "payoutSuccess",
+                "type": "bool"
             }
         ],
         "name": "DeliveryCompleted",
@@ -158,12 +164,31 @@ export const contractABI = [
             },
             {
                 "indexed": false,
-                "internalType": "string",
-                "name": "dataHash",
-                "type": "string"
+                "internalType": "string[]",
+                "name": "imageHashes",
+                "type": "string[]"
             }
         ],
         "name": "ListingCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "listingId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "rating",
+                "type": "uint8"
+            }
+        ],
+        "name": "ReviewSubmitted",
         "type": "event"
     },
     {
@@ -313,6 +338,37 @@ export const contractABI = [
                 "internalType": "uint256",
                 "name": "_orderId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "enum Updated.DeliveryStatus",
+                "name": "_status",
+                "type": "uint8"
+            }
+        ],
+        "name": "updateDeliveryStatus",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_orderId",
+                "type": "uint256"
+            }
+        ],
+        "name": "agentConfirmDelivery",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_orderId",
+                "type": "uint256"
             }
         ],
         "name": "buyerConfirmDelivery",
@@ -379,11 +435,35 @@ export const contractABI = [
                 "internalType": "string",
                 "name": "_dataHash",
                 "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_imageHashes",
+                "type": "string[]"
             }
         ],
         "name": "createListing",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_listingId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getListingImages",
+        "outputs": [
+            {
+                "internalType": "string[]",
+                "name": "",
+                "type": "string[]"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -424,6 +504,93 @@ export const contractABI = [
         "stateMutability": "payable",
         "type": "function"
     },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_orderId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint8",
+                "name": "_rating",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "_review",
+                "type": "string"
+            }
+        ],
+        "name": "submitReview",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_listingId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "_reviewer",
+                "type": "address"
+            }
+        ],
+        "name": "hasReviewed",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "listingReviews",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "rating",
+                "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "review",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "reviewer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+
     {
         "inputs": [
             {
@@ -473,11 +640,17 @@ export const contractABI = [
                 "internalType": "string",
                 "name": "dataHash",
                 "type": "string"
+            },
+            {
+                "internalType": "string[]",
+                "name": "imageHashes",
+                "type": "string[]"
             }
         ],
         "stateMutability": "view",
         "type": "function"
     },
+
     {
         "inputs": [],
         "name": "nextListingId",
@@ -666,4 +839,4 @@ export const contractABI = [
     }
 ];
 
-export const contractAddress = "0xa12E01C96da310e30B25A9aBD900815A5b5aE1dB";
+export const contractAddress = "0xAF495314768216465B9ACB5340DEf6BE9356835F";

@@ -33,9 +33,9 @@ export const Background3D = () => {
   }, []);
 
   return (
-    <div 
+    <div
       className="absolute inset-0 overflow-hidden pointer-events-none"
-      style={{ 
+      style={{
         perspective: '1200px',
         perspectiveOrigin: '50% 50%',
       }}
@@ -51,20 +51,21 @@ export const Background3D = () => {
             width: `${shape.size}px`,
             height: `${shape.size}px`,
             transformStyle: 'preserve-3d',
+            filter: 'blur(1px)', // Depth of field effect
           }}
           animate={{
             rotateX: [0, 360],
             rotateY: [0, 360],
             rotateZ: [0, 180],
-            y: [0, -50, 0],
-            x: [0, Math.sin(shape.id) * 30, 0],
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
+            y: [0, -40, 0],
+            x: [0, Math.sin(shape.id) * 20, 0],
+            scale: [1, 1.1, 1],
+            opacity: [0.1, 0.25, 0.1], // Deeper, more subtle
           }}
           transition={{
-            duration: shape.duration,
+            duration: shape.duration * 1.5, // Slower, more majestic
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
             delay: shape.delay,
           }}
         >
@@ -78,12 +79,12 @@ export const Background3D = () => {
               }}
             >
               {[
-                { transform: 'translateZ(25px)', border: '1px solid rgba(20, 184, 166, 0.3)' },
-                { transform: 'translateZ(-25px) rotateY(180deg)', border: '1px solid rgba(20, 184, 166, 0.3)' },
-                { transform: 'rotateY(90deg) translateZ(25px)', border: '1px solid rgba(6, 182, 212, 0.3)' },
-                { transform: 'rotateY(-90deg) translateZ(25px)', border: '1px solid rgba(6, 182, 212, 0.3)' },
-                { transform: 'rotateX(90deg) translateZ(25px)', border: '1px solid rgba(59, 130, 246, 0.3)' },
-                { transform: 'rotateX(-90deg) translateZ(25px)', border: '1px solid rgba(59, 130, 246, 0.3)' },
+                { transform: 'translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.1)' },
+                { transform: 'translateZ(-25px) rotateY(180deg)', border: '1px solid rgba(255, 255, 255, 0.1)' },
+                { transform: 'rotateY(90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
+                { transform: 'rotateY(-90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
+                { transform: 'rotateX(90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
+                { transform: 'rotateX(-90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
               ].map((face, idx) => (
                 <div
                   key={idx}
@@ -102,9 +103,9 @@ export const Background3D = () => {
             <div
               className="w-full h-full rounded-full"
               style={{
-                background: `radial-gradient(circle at 30% 30%, ${shape.color}, transparent 70%)`,
-                border: '2px solid rgba(20, 184, 166, 0.3)',
-                boxShadow: `inset 0 0 30px ${shape.color}, 0 0 40px ${shape.color}`,
+                background: `radial-gradient(circle at 30% 30%, ${shape.color}, transparent 80%)`,
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: `inset 0 0 20px ${shape.color}`,
               }}
             />
           ) : (
@@ -120,26 +121,8 @@ export const Background3D = () => {
                 style={{
                   clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
                   background: `linear-gradient(135deg, ${shape.color}, transparent)`,
-                  border: '1px solid rgba(20, 184, 166, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
                   transform: 'translateZ(20px)',
-                }}
-              />
-              <div
-                className="absolute w-full h-full"
-                style={{
-                  clipPath: 'polygon(50% 0%, 0% 100%, 50% 50%)',
-                  background: `linear-gradient(225deg, ${shape.color}, transparent)`,
-                  border: '1px solid rgba(6, 182, 212, 0.3)',
-                  transform: 'rotateY(120deg) translateZ(20px)',
-                }}
-              />
-              <div
-                className="absolute w-full h-full"
-                style={{
-                  clipPath: 'polygon(50% 0%, 100% 100%, 50% 50%)',
-                  background: `linear-gradient(315deg, ${shape.color}, transparent)`,
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
-                  transform: 'rotateY(240deg) translateZ(20px)',
                 }}
               />
             </div>

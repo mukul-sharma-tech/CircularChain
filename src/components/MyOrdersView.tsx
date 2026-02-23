@@ -6,7 +6,7 @@ import { useState } from "react";
 import SelectAgentModal from "./SelectAgentModal"; 
 
 export const MyOrdersView = () => {
-    const { orders, loading } = useOrders();
+    const { orders, loading, refetch } = useOrders();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
@@ -22,7 +22,7 @@ export const MyOrdersView = () => {
             <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {orders.length === 0 ? <p>You have no orders.</p> :
                     orders.map(order => (
-                        <OrderCard key={String(order.id)} order={order} onAssignAgent={handleOpenAssignModal} />
+                        <OrderCard key={String(order.id)} order={order} onAssignAgent={handleOpenAssignModal} onRefetch={refetch} />
                     ))
                 }
             </div>

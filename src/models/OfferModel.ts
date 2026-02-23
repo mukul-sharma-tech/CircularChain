@@ -24,6 +24,6 @@ const OfferSchema: Schema<IOffer> = new Schema({
   isLocalAgent: { type: Boolean, default: false },
 }, { timestamps: true });
 
-const OfferModel: Model<IOffer> = mongoose.models.Offer || mongoose.model<IOffer>('Offer', OfferSchema);
+const OfferModel: Model<IOffer> = (mongoose.models && mongoose.models.Offer) || mongoose.model<IOffer>('Offer', OfferSchema);
 
 export default OfferModel;

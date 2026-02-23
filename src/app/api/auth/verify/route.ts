@@ -76,7 +76,15 @@ export async function POST(req: NextRequest) {
     await dbConnect();
     const user = await User.findOne({ walletAddress: fields.data.address.toLowerCase() });
 
-    if (!user || user.nonce !== fields.data.nonce) {
+    // If there's no user for this address, return a clear 404 so the client can show an appropriate message
+    if (!user) {
+        console.warn(`Verify failed: no user found for address ${fields.data.address.toLowerCase()}`);
+        return NextResponse.json({ message: 'User not found. Cannot verify.' }, { status: 404 });
+    }
+
+    // If the nonces don't match, indicate an invalid nonce
+    if (user.nonce !== fields.data.nonce) {
+        console.warn(`Verify failed: nonce mismatch for ${fields.data.address.toLowerCase()}`);
         return NextResponse.json({ message: 'Invalid nonce.' }, { status: 422 });
     }
 
