@@ -44,7 +44,7 @@ export default function DashboardPage() {
   // Admin View
   if (user.role === "admin") {
     return (
-      <div className="min-h-screen bg-[#04040a] text-slate-100 relative overflow-hidden">
+      <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
         <Background3D />
         <div className="relative z-10 p-8">
           <h1 className="text-4xl font-black mb-12 text-center text-gradient">
@@ -61,16 +61,16 @@ export default function DashboardPage() {
   // Agent View
   if (user.role === "agent") {
     return (
-      <div className="min-h-screen bg-[#04040a] text-slate-100 relative overflow-hidden">
+      <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
         <Background3D />
         <div className="relative z-10 p-8 max-w-7xl mx-auto">
           <header className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
-            <h1 className="text-3xl font-bold tracking-tight">
-              Welcome, <span className="text-teal-400">{user.walletAddress?.slice(0, 6)}</span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              Welcome, <span className="text-accent-teal">{user.walletAddress?.slice(0, 6)}</span>
             </h1>
-            <div className="glass-card px-8 py-4 rounded-2xl border-teal-500/20">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Total Earnings</h3>
-              <p className="text-3xl font-black text-teal-400">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
+            <div className="glass-card px-8 py-4 rounded-2xl border-accent-teal/20">
+              <h3 className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Total Earnings</h3>
+              <p className="text-3xl font-black text-accent-teal">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
             </div>
           </header>
           <div className="glass-panel p-8 rounded-3xl">
@@ -94,13 +94,13 @@ export default function DashboardPage() {
             >
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="w-full md:w-auto px-8 py-4 rounded-2xl bg-teal-500 text-slate-900 font-bold hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20"
+                className="w-full md:w-auto px-8 py-4 rounded-2xl bg-accent-teal text-background font-bold hover:opacity-90 transition-all shadow-lg shadow-accent-teal/20"
               >
                 Create New Listing
               </button>
-              <div className="w-full md:w-auto glass-card px-8 py-4 rounded-2xl border-teal-500/20">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">My Earnings</h3>
-                <p className="text-2xl font-black text-teal-400">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
+              <div className="w-full md:w-auto glass-card px-8 py-4 rounded-2xl border-accent-teal/20">
+                <h3 className="text-xs font-bold text-muted uppercase tracking-widest mb-1">My Earnings</h3>
+                <p className="text-2xl font-black text-accent-teal">₹ {(Number(ethers.formatEther(totalEarnings)) * 100000).toFixed(2)}</p>
               </div>
             </motion.div>
           )}
@@ -130,7 +130,7 @@ export default function DashboardPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto p-8">
         {/* Navigation Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12 p-1.5 bg-slate-900/50 backdrop-blur-md rounded-2xl border border-slate-800 w-fit mx-auto">
+        <div className="flex flex-wrap justify-center gap-2 mb-12 p-1.5 bg-card/50 backdrop-blur-md rounded-2xl border border-border w-fit mx-auto">
           {[
             { key: "marketplace", label: "Marketplace" },
             { key: "orders", label: "My Orders" },
@@ -141,8 +141,8 @@ export default function DashboardPage() {
               key={tab.key}
               onClick={() => setView(tab.key as "marketplace" | "orders" | "circular-sag" | "waste-compliance")}
               className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${view === tab.key
-                ? "bg-teal-500 text-slate-900 shadow-lg shadow-teal-500/20"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-accent-teal text-background shadow-lg shadow-accent-teal/20"
+                : "text-muted hover:text-foreground hover:bg-white/5"
                 }`}
             >
               {tab.label}

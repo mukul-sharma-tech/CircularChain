@@ -56,26 +56,26 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+        <div className="min-h-screen bg-background flex items-center justify-center p-6">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="w-full max-w-2xl bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700/50 overflow-hidden"
+                className="w-full max-w-2xl bg-card backdrop-blur-xl rounded-3xl shadow-2xl border border-border overflow-hidden"
             >
                 {/* Header */}
-                <div className="relative bg-gradient-to-r from-teal-500/20 to-cyan-500/20 p-8 border-b border-slate-700/50">
+                <div className="relative bg-gradient-to-r from-accent-teal/20 to-accent-cyan/20 p-8 border-b border-border">
                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-teal-500/10 to-transparent blur-2xl" />
                     <div className="relative">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="p-3 rounded-xl bg-teal-500/20 border border-teal-500/30">
-                                <svg className="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="p-3 rounded-xl bg-accent-teal/20 border border-accent-teal/30">
+                                <svg className="w-6 h-6 text-accent-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
-                            <h2 className="text-3xl font-bold text-white">Complete Your Profile</h2>
+                            <h2 className="text-3xl font-bold text-foreground">Complete Your Profile</h2>
                         </div>
-                        <p className="text-slate-300">Tell us about yourself to get started with CircularChain</p>
+                        <p className="text-muted">Tell us about yourself to get started with CircularChain</p>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     {/* Name Input */}
                     <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">
+                        <label className="block text-sm font-semibold text-dim mb-2">
                             Full Name
                         </label>
                         <input
@@ -91,13 +91,13 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                             value={name}
                             onChange={e => setName(e.target.value)}
                             placeholder="John Doe"
-                            className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all"
+                            className="w-full px-4 py-3 bg-background/50 border border-border rounded-xl text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-teal/50 focus:border-accent-teal transition-all"
                         />
                     </div>
 
                     {/* Company Name Input */}
                     <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">
+                        <label className="block text-sm font-semibold text-dim mb-2">
                             Company Name
                         </label>
                         <input
@@ -105,13 +105,13 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                             value={companyName}
                             onChange={e => setCompanyName(e.target.value)}
                             placeholder="Acme Industries"
-                            className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all"
+                            className="w-full px-4 py-3 bg-background/50 border border-border rounded-xl text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent-teal/50 focus:border-accent-teal transition-all"
                         />
                     </div>
 
                     {/* Address Input */}
                     <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">
+                        <label className="block text-sm font-semibold text-dim mb-2">
                             Company Address
                         </label>
                         <textarea
@@ -135,8 +135,8 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                                 whileTap={{ scale: 0.98 }}
                                 className={`relative flex items-start p-5 rounded-xl border-2 cursor-pointer transition-all ${
                                     role === 'user'
-                                        ? 'border-teal-500 bg-teal-500/10'
-                                        : 'border-slate-700 bg-slate-900/30 hover:border-slate-600'
+                                        ? 'border-accent-teal bg-accent-teal/10'
+                                        : 'border-border bg-background/30 hover:border-accent-teal/50'
                                 }`}
                             >
                                 <input
@@ -149,16 +149,16 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                                 />
                                 <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className={`p-2 rounded-lg ${role === 'user' ? 'bg-teal-500/20' : 'bg-slate-800'}`}>
-                                            <svg className={`w-5 h-5 ${role === 'user' ? 'text-teal-400' : 'text-slate-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className={`p-2 rounded-lg ${role === 'user' ? 'bg-accent-teal/20' : 'bg-card'}`}>
+                                            <svg className={`w-5 h-5 ${role === 'user' ? 'text-accent-teal' : 'text-muted'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                             </svg>
                                         </div>
-                                        <span className={`font-bold ${role === 'user' ? 'text-white' : 'text-slate-400'}`}>
+                                        <span className={`font-bold ${role === 'user' ? 'text-foreground' : 'text-muted'}`}>
                                             Industry (Prosumer)
                                         </span>
                                     </div>
-                                    <p className="text-xs text-slate-400 leading-relaxed">
+                                    <p className="text-xs text-muted leading-relaxed">
                                         Buy and sell industrial waste materials on the marketplace
                                     </p>
                                 </div>
@@ -179,8 +179,8 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                                 whileTap={{ scale: 0.98 }}
                                 className={`relative flex items-start p-5 rounded-xl border-2 cursor-pointer transition-all ${
                                     role === 'agent'
-                                        ? 'border-teal-500 bg-teal-500/10'
-                                        : 'border-slate-700 bg-slate-900/30 hover:border-slate-600'
+                                        ? 'border-accent-teal bg-accent-teal/10'
+                                        : 'border-border bg-background/30 hover:border-accent-teal/50'
                                 }`}
                             >
                                 <input
@@ -193,23 +193,23 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                                 />
                                 <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className={`p-2 rounded-lg ${role === 'agent' ? 'bg-teal-500/20' : 'bg-slate-800'}`}>
-                                            <svg className={`w-5 h-5 ${role === 'agent' ? 'text-teal-400' : 'text-slate-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className={`p-2 rounded-lg ${role === 'agent' ? 'bg-accent-teal/20' : 'bg-card'}`}>
+                                            <svg className={`w-5 h-5 ${role === 'agent' ? 'text-accent-teal' : 'text-muted'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
                                         </div>
-                                        <span className={`font-bold ${role === 'agent' ? 'text-white' : 'text-slate-400'}`}>
+                                        <span className={`font-bold ${role === 'agent' ? 'text-foreground' : 'text-muted'}`}>
                                             Logistics Agent
                                         </span>
                                     </div>
-                                    <p className="text-xs text-slate-400 leading-relaxed">
+                                    <p className="text-xs text-muted leading-relaxed">
                                         Provide transportation and delivery services for waste materials
                                     </p>
                                 </div>
                                 {role === 'agent' && (
                                     <div className="absolute top-3 right-3">
-                                        <div className="w-6 h-6 rounded-full bg-teal-500 flex items-center justify-center">
-                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className="w-6 h-6 rounded-full bg-accent-teal flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                             </svg>
                                         </div>
@@ -239,11 +239,11 @@ const ProfileSetup = ({ onProfileComplete }: ProfileSetupProps) => {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-slate-900 font-bold text-lg shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                        className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accent-teal to-accent-cyan text-background font-bold text-lg shadow-lg shadow-accent-teal/30 hover:shadow-accent-teal/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                     >
                         {isSubmitting ? (
                             <>
-                                <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                                <div className="w-5 h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                                 <span>Saving Profile...</span>
                             </>
                         ) : (

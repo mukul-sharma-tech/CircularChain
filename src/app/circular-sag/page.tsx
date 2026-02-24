@@ -568,15 +568,15 @@ export default function CircularSagePage() {
   };
 
   return (
-    <div className="bg-transparent text-slate-100">
+    <div className="bg-transparent text-foreground">
       <div className="container mx-auto max-w-7xl">
         {status.message && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-2xl mb-8 ${status.type === "error" ? "bg-red-500/10 border border-red-500/20 text-red-400" :
-              status.type === "success" ? "bg-green-500/10 border border-green-500/20 text-green-400" :
-                "bg-blue-500/10 border border-blue-500/20 text-blue-400"
+            className={`p-4 rounded-2xl mb-8 ${status.type === "error" ? "bg-red-500/10 border border-red-500/20 text-red-500" :
+              status.type === "success" ? "bg-green-500/10 border border-green-500/20 text-green-500" :
+                "bg-accent-blue/10 border border-accent-blue/20 text-accent-blue"
               }`}
           >
             {status.message}
@@ -587,9 +587,9 @@ export default function CircularSagePage() {
           {/* Chat Section */}
           <div className="glass-panel p-8 rounded-3xl">
             <h2 className="text-2xl font-black mb-1 text-gradient">CircularSage AI</h2>
-            <p className="text-slate-400 mb-8 text-sm font-medium opacity-80 uppercase tracking-widest leading-none">Sustainability Intelligence</p>
+            <p className="text-muted mb-8 text-sm font-medium opacity-80 uppercase tracking-widest leading-none">Sustainability Intelligence</p>
 
-            <div className="glass-card p-4 rounded-xl mb-6 bg-white/5 border-white/5 font-mono text-xs text-slate-500">
+            <div className="glass-card p-4 rounded-xl mb-6 bg-background/50 border-border font-mono text-xs text-muted">
               <span className="opacity-50">SESSION_ID:</span> {sessionId}
             </div>
 
@@ -600,8 +600,8 @@ export default function CircularSagePage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`p-4 rounded-2xl max-w-[90%] ${message.role === "user"
-                    ? "bg-teal-500 text-slate-900 ml-auto font-medium shadow-lg shadow-teal-500/10"
-                    : "bg-slate-800/50 border border-slate-700/50 backdrop-blur-md"
+                    ? "bg-accent-teal text-background ml-auto font-medium shadow-lg shadow-accent-teal/10"
+                    : "bg-card border border-border backdrop-blur-md text-foreground"
                     }`}
                 >
                   <div className="text-[10px] opacity-40 mb-1 font-bold uppercase tracking-widest">
@@ -611,13 +611,13 @@ export default function CircularSagePage() {
                 </motion.div>
               ))}
               {isLoading && (
-                <div className="flex items-center gap-3 p-4 bg-slate-800/30 rounded-2xl w-fit">
+                <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-2xl w-fit">
                   <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-accent-teal rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-accent-teal rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-accent-teal rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                   </div>
-                  <span className="text-xs text-slate-500 font-medium uppercase tracking-widest">Processing</span>
+                  <span className="text-xs text-muted font-medium uppercase tracking-widest">Processing</span>
                 </div>
               )}
             </div>
@@ -629,11 +629,11 @@ export default function CircularSagePage() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && sendQuery()}
                 placeholder="Ask about circular economies..."
-                className="flex-1 bg-slate-900/50 border border-slate-800 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all text-sm"
+                className="flex-1 bg-background border border-border rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-accent-teal/50 transition-all text-sm text-foreground"
               />
               <button
                 onClick={sendQuery}
-                className="bg-teal-500 hover:bg-teal-400 text-slate-900 p-4 rounded-2xl transition-all shadow-lg shadow-teal-500/20"
+                className="bg-accent-teal hover:opacity-90 text-background p-4 rounded-2xl transition-all shadow-lg shadow-accent-teal/20"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -645,52 +645,52 @@ export default function CircularSagePage() {
           {/* Controls Section */}
           <div className="space-y-6">
             <div className="glass-panel p-8 rounded-3xl">
-              <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-slate-100">
-                <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-foreground">
+                <span className="w-2 h-2 bg-accent-teal rounded-full"></span>
                 Intelligence Controls
               </h3>
 
               <div className="grid gap-4">
                 <button
                   onClick={resetMemory}
-                  className="w-full glass-card p-4 rounded-2xl text-left hover:bg-blue-500/10 hover:border-blue-500/30 group transition-all"
+                  className="w-full bg-background border border-border p-4 rounded-2xl text-left hover:bg-accent-blue/10 hover:border-accent-blue/30 group transition-all"
                 >
-                  <div className="text-blue-400 font-bold mb-1">Reset Memory</div>
-                  <div className="text-xs text-slate-500">Purge local session history and neural cache.</div>
+                  <div className="text-accent-blue font-bold mb-1">Reset Memory</div>
+                  <div className="text-xs text-muted">Purge local session history and neural cache.</div>
                 </button>
 
                 <button
                   onClick={testConnection}
-                  className="w-full glass-card p-4 rounded-2xl text-left hover:bg-purple-500/10 hover:border-purple-500/30 group transition-all"
+                  className="w-full bg-background border border-border p-4 rounded-2xl text-left hover:bg-purple-500/10 hover:border-purple-500/30 group transition-all"
                 >
-                  <div className="text-purple-400 font-bold mb-1">System Audit</div>
-                  <div className="text-xs text-slate-500">Verify API gateway and blockchain connectivity.</div>
+                  <div className="text-purple-500 font-bold mb-1">System Audit</div>
+                  <div className="text-xs text-muted">Verify API gateway and blockchain connectivity.</div>
                 </button>
 
                 <button
                   onClick={clearChat}
-                  className="w-full glass-card p-4 rounded-2xl text-left hover:bg-red-500/10 hover:border-red-500/30 group transition-all"
+                  className="w-full bg-background border border-border p-4 rounded-2xl text-left hover:bg-red-500/10 hover:border-red-500/30 group transition-all"
                 >
-                  <div className="text-red-400 font-bold mb-1">Clear HUD</div>
-                  <div className="text-xs text-slate-500">Wipe the visual interface but keep session.</div>
+                  <div className="text-red-500 font-bold mb-1">Clear HUD</div>
+                  <div className="text-xs text-muted">Wipe the visual interface but keep session.</div>
                 </button>
               </div>
             </div>
 
             <div className="glass-panel p-8 rounded-3xl">
-              <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-slate-100">
-                <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-foreground">
+                <span className="w-2 h-2 bg-accent-teal rounded-full"></span>
                 Knowledge Ingestion
               </h3>
               <textarea
                 value={docText}
                 onChange={(e) => setDocText(e.target.value)}
                 placeholder="Insert document data (JSON or Raw Text)..."
-                className="w-full h-32 bg-slate-900/50 border border-slate-800 rounded-2xl p-4 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-teal-500/50 mb-4 text-slate-300"
+                className="w-full h-32 bg-background border border-border rounded-2xl p-4 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-accent-teal/50 mb-4 text-dim"
               />
               <button
                 onClick={ingestDocuments}
-                className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+                className="w-full py-4 rounded-2xl bg-muted border border-border text-foreground font-bold hover:opacity-80 transition-all uppercase tracking-widest text-xs"
               >
                 Incorporate Knowledge
               </button>

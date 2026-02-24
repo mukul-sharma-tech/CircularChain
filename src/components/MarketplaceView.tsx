@@ -248,24 +248,24 @@ export const MarketplaceView = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-4">Loading marketplace...</p>;
+  if (loading) return <p className="text-center mt-4 text-muted">Loading marketplace...</p>;
   if (error) return <p className="text-red-500 text-center mt-4">{error}</p>;
 
   return (
     <div>
-      <h3 className="text-xl md:text-2xl font-bold mb-4">Available Materials</h3>
+      <h3 className="text-xl md:text-2xl font-bold mb-4 text-foreground">Available Materials</h3>
       <div className="mb-4 flex items-center gap-3">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name or company..."
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700 flex-1"
+          className="p-2 rounded-lg bg-card text-foreground border border-border flex-1 focus:outline-none focus:ring-2 focus:ring-accent-teal/50"
         />
       </div>
 
       {listings.length === 0 ? (
-        <p>No listings available right now.</p>
+        <p className="text-muted">No listings available right now.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {listings
@@ -277,11 +277,11 @@ export const MarketplaceView = () => {
             .map((l) => (
               <motion.div
                 key={String(l.id)}
-                className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl border border-teal-500/30 shadow-lg hover:shadow-teal-400/50 transition-shadow"
+                className="bg-card backdrop-blur-md p-6 rounded-xl border border-accent-teal/30 shadow-lg hover:shadow-accent-teal/50 transition-shadow"
                 whileHover={{ scale: 1.03 }}
               >
                 <a href={`/listing/${slugify(l.name, l.id)}`} className="block">
-                  <div className="w-full h-36 bg-gray-900 rounded overflow-hidden mb-3 flex items-center justify-center">
+                  <div className="w-full h-36 bg-background rounded overflow-hidden mb-3 flex items-center justify-center">
                     {l.imageUrls && l.imageUrls.length > 0 ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
@@ -313,16 +313,16 @@ export const MarketplaceView = () => {
                         }}
                       />
                     ) : (
-                      <div className="text-gray-500 text-center px-2">
+                      <div className="text-muted text-center px-2">
                         <div>No image</div>
                         {l.rawImageValues && l.rawImageValues.length > 0 && (
-                          <div className="mt-2 text-xs text-gray-400">
+                          <div className="mt-2 text-xs text-muted/60">
                             <div className="truncate">Raw: {l.rawImageValues?.[0]}</div>
                             <div className="mt-1">
                               {l.rawImageValues?.[0] && (
                                 <>
                                   <a href={l.rawImageValues?.[0].startsWith('http') ? l.rawImageValues?.[0] : `https://ipfs.io/ipfs/${l.rawImageValues?.[0]}`} target="_blank" rel="noreferrer" className="underline text-xs">Open raw image</a>
-                                  <button onClick={() => window.open(l.rawImageValues?.[0].startsWith('http') ? l.rawImageValues?.[0] : `https://ipfs.io/ipfs/${l.rawImageValues?.[0]}`)} className="ml-2 text-xs text-gray-300 underline">Open</button>
+                                  <button onClick={() => window.open(l.rawImageValues?.[0].startsWith('http') ? l.rawImageValues?.[0] : `https://ipfs.io/ipfs/${l.rawImageValues?.[0]}`)} className="ml-2 text-xs text-dim underline">Open</button>
                                 </>
                               )}
                             </div>
@@ -331,16 +331,16 @@ export const MarketplaceView = () => {
                       </div>
                     )}
                   </div>
-                  <h4 className="font-bold text-white text-lg">{l.name}</h4>
+                  <h4 className="font-bold text-foreground text-lg">{l.name}</h4>
                 </a>
-                <p className="text-gray-400 mt-1">From: {l.companyName}</p>
-                <p className="text-teal-400 mt-1">
+                <p className="text-muted mt-1">From: {l.companyName}</p>
+                <p className="text-accent-teal mt-1">
                   Price: {ethers.formatEther(l.pricePerUnit)} ETH / unit
                 </p>
-                <p className="text-gray-300 mt-1">Available: {String(l.quantityAvailable)} units</p>
-                <p className="text-gray-500 text-xs mt-1">Seller: {l.seller.slice(0, 6)}...</p>
+                <p className="text-dim mt-1">Available: {String(l.quantityAvailable)} units</p>
+                <p className="text-muted text-xs mt-1">Seller: {l.seller.slice(0, 6)}...</p>
                 <button
-                  className="mt-4 w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-400 transition-colors"
+                  className="mt-4 w-full bg-accent-teal text-background py-2 rounded-lg hover:opacity-90 transition-opacity"
                   onClick={() => handleCreateOrder(l.id, l.pricePerUnit)}
                 >
                   Order Now

@@ -17,7 +17,7 @@ import { Background3D } from "@/components/Background3D";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#04040a] text-slate-100 relative overflow-hidden selection:bg-teal-500/30">
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden selection:bg-accent-teal/30">
       {/* 3D Animated Background */}
       <Background3D />
 
@@ -28,11 +28,11 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="inline-flex items-center px-4 py-1.5 mb-8 rounded-full border border-teal-500/20 bg-teal-500/5 text-teal-400 text-sm font-medium backdrop-blur-sm"
+            className="inline-flex items-center px-4 py-1.5 mb-8 rounded-full border border-accent-teal/20 bg-accent-teal/5 text-accent-teal text-sm font-medium backdrop-blur-sm"
           >
             <span className="relative flex h-2 w-2 mr-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-teal/75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-teal"></span>
             </span>
             Reimagining Industrial Sustainability
           </motion.div>
@@ -46,7 +46,7 @@ export default function Home() {
             <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tight mb-6">
               <span className="text-gradient">Circular</span>
               <br />
-              <span className="text-white opacity-90">Chain</span>
+              <span className="text-foreground opacity-90">Chain</span>
             </h1>
           </motion.div>
 
@@ -56,10 +56,10 @@ export default function Home() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-2xl md:text-3xl font-light text-slate-300 max-w-3xl mx-auto leading-relaxed"
+              className="text-2xl md:text-3xl font-light text-dim max-w-3xl mx-auto leading-relaxed"
             >
-              Transforming <span className="text-teal-400 font-medium">Industrial Waste</span> into 
-              <span className="block italic text-slate-400">Valuable Strategic Assets.</span>
+              Transforming <span className="text-accent-teal font-medium">Industrial Waste</span> into 
+              <span className="block italic text-muted">Valuable Strategic Assets.</span>
             </motion.p>
           </div>
 
@@ -67,7 +67,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 1 }}
-            className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-16"
+            className="text-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-16"
           >
             A blockchain-powered ecosystem connecting industries, logistics, and buyers 
             to architect a seamless circular economy. Transparent. Secure. Visionary.
@@ -81,7 +81,7 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24"
           >
             <LoginButton />
-            <button className="px-8 py-4 rounded-2xl border border-slate-700 bg-transparent text-slate-300 font-medium hover:bg-slate-800/50 hover:text-white transition-all">
+            <button className="px-8 py-4 rounded-2xl border border-border bg-transparent text-dim font-medium hover:bg-card-hover hover:text-foreground transition-all">
               Explore Marketplace
             </button>
           </motion.div>
@@ -113,13 +113,13 @@ export default function Home() {
                 transition={{ delay: 0.2 * idx, duration: 0.8 }}
                 className="glass-card p-8 rounded-3xl text-left group"
               >
-                <div className="w-12 h-12 mb-6 rounded-2xl bg-teal-500/10 flex items-center justify-center group-hover:bg-teal-500/20 transition-colors">
-                  <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 mb-6 rounded-2xl bg-accent-teal/10 flex items-center justify-center group-hover:bg-accent-teal/20 transition-colors">
+                  <svg className="w-6 h-6 text-accent-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={feature.icon} />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{feature.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
+                <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">{feature.title}</h3>
+                <p className="text-muted text-sm leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -127,8 +127,8 @@ export default function Home() {
       </main>
 
       {/* Decorative Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-500/10 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent-teal/10 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-blue/10 blur-[120px] rounded-full" />
     </div>
   );
 }

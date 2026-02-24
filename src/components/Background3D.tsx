@@ -22,10 +22,10 @@ export const Background3D = () => {
         delay: seededRandom(seed + 3) * 5,
         duration: seededRandom(seed + 4) * 15 + 10,
         color: [
-          'rgba(20, 184, 166, 0.2)',
-          'rgba(6, 182, 212, 0.2)',
-          'rgba(59, 130, 246, 0.2)',
-          'rgba(139, 92, 246, 0.2)',
+          'rgba(var(--teal-rgb), 0.2)',
+          'rgba(var(--cyan-rgb), 0.2)',
+          'rgba(var(--blue-rgb), 0.2)',
+          'rgba(var(--purple-rgb), 0.2)',
         ][Math.floor(seededRandom(seed + 5) * 4)],
         type: Math.floor(seededRandom(seed + 6) * 3), // 0: cube, 1: sphere, 2: tetrahedron
       };
@@ -79,12 +79,12 @@ export const Background3D = () => {
               }}
             >
               {[
-                { transform: 'translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.1)' },
-                { transform: 'translateZ(-25px) rotateY(180deg)', border: '1px solid rgba(255, 255, 255, 0.1)' },
-                { transform: 'rotateY(90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
-                { transform: 'rotateY(-90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
-                { transform: 'rotateX(90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
-                { transform: 'rotateX(-90deg) translateZ(25px)', border: '1px solid rgba(255, 255, 255, 0.05)' },
+                { transform: 'translateZ(25px)', border: '1px solid var(--border)' },
+                { transform: 'translateZ(-25px) rotateY(180deg)', border: '1px solid var(--border)' },
+                { transform: 'rotateY(90deg) translateZ(25px)', border: '1px solid var(--border)' },
+                { transform: 'rotateY(-90deg) translateZ(25px)', border: '1px solid var(--border)' },
+                { transform: 'rotateX(90deg) translateZ(25px)', border: '1px solid var(--border)' },
+                { transform: 'rotateX(-90deg) translateZ(25px)', border: '1px solid var(--border)' },
               ].map((face, idx) => (
                 <div
                   key={idx}
@@ -104,7 +104,7 @@ export const Background3D = () => {
               className="w-full h-full rounded-full"
               style={{
                 background: `radial-gradient(circle at 30% 30%, ${shape.color}, transparent 80%)`,
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid var(--border)',
                 boxShadow: `inset 0 0 20px ${shape.color}`,
               }}
             />
@@ -121,7 +121,7 @@ export const Background3D = () => {
                 style={{
                   clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
                   background: `linear-gradient(135deg, ${shape.color}, transparent)`,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid var(--border)',
                   transform: 'translateZ(20px)',
                 }}
               />
@@ -132,9 +132,9 @@ export const Background3D = () => {
 
       {/* Animated gradient orbs for depth */}
       <motion.div
-        className="absolute top-20 left-10 w-[500px] h-[500px] rounded-full blur-3xl"
+        className="absolute top-20 left-10 w-[500px] h-[500px] rounded-full blur-3xl opacity-40"
         style={{
-          background: 'radial-gradient(circle, rgba(20, 184, 166, 0.4), transparent 70%)',
+          background: 'radial-gradient(circle, rgba(var(--teal-rgb), 0.4), transparent 70%)',
         }}
         animate={{
           x: [0, 150, 0],
@@ -148,9 +148,9 @@ export const Background3D = () => {
         }}
       />
       <motion.div
-        className="absolute bottom-20 right-10 w-[600px] h-[600px] rounded-full blur-3xl"
+        className="absolute bottom-20 right-10 w-[600px] h-[600px] rounded-full blur-3xl opacity-40"
         style={{
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%)',
+          background: 'radial-gradient(circle, rgba(var(--purple-rgb), 0.4), transparent 70%)',
         }}
         animate={{
           x: [0, -150, 0],
@@ -164,9 +164,9 @@ export const Background3D = () => {
         }}
       />
       <motion.div
-        className="absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 opacity-30"
         style={{
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%)',
+          background: 'radial-gradient(circle, rgba(var(--cyan-rgb), 0.3), transparent 70%)',
         }}
         animate={{
           scale: [1, 1.5, 1],

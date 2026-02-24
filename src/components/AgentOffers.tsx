@@ -44,22 +44,22 @@ export const AgentOffers = () => {
     };
 
     if (offers.length === 0) {
-        return <p className="text-gray-400">You have no pending offers.</p>;
+        return <p className="text-muted">You have no pending offers.</p>;
     }
 
     return (
         <div className="space-y-4">
             {offers.map(offer => (
-                <div key={offer.orderId} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                    <h4 className="font-bold">Offer for Order #{offer.orderId}</h4>
-                    <p className="text-sm text-gray-300">{offer.wasteMaterial}</p>
-                    <p className="text-xs text-gray-400">{offer.originLocation} to {offer.destinationLocation}</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                <div key={offer.orderId} className="bg-card p-4 rounded-lg border border-border">
+                    <h4 className="font-bold text-foreground">Offer for Order #{offer.orderId}</h4>
+                    <p className="text-sm text-dim">{offer.wasteMaterial}</p>
+                    <p className="text-xs text-muted/80">{offer.originLocation} to {offer.destinationLocation}</p>
+                    <p className="text-xs text-muted/60 mt-1">
                         Logistics Type: {offer.isLocalAgent ? "Local / Offline (No payout)" : "Platform Agent (5% fee)"}
                     </p>
                     <div className="mt-4 flex gap-4 items-center">
-                        <button onClick={() => setSelectedPlan(offer.compliancePlan as unknown as Record<string, unknown>)} className="text-sm font-semibold text-teal-400 hover:underline">View Compliance Plan</button>
-                        <button onClick={() => handleAccept(offer.orderId)} className="text-sm font-semibold bg-green-600 px-3 py-1 rounded text-white">Accept On-Chain</button>
+                        <button onClick={() => setSelectedPlan(offer.compliancePlan as unknown as Record<string, unknown>)} className="text-sm font-semibold text-accent-teal hover:underline">View Compliance Plan</button>
+                        <button onClick={() => handleAccept(offer.orderId)} className="text-sm font-semibold bg-green-500 px-3 py-1 rounded text-background hover:opacity-90 transition-opacity">Accept On-Chain</button>
                     </div>
                 </div>
             ))}

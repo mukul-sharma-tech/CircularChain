@@ -147,15 +147,15 @@ export const AgentHub = () => {
     return (
         <div>
             {/* Tabs */}
-            <div className="flex justify-center border-b border-gray-700 mb-6">
+            <div className="flex justify-center border-b border-border mb-6">
                 {["status", "jobs"].map((tab) => (
                     <motion.button
                         key={tab}
                         onClick={() => setActiveTab(tab as "status" | "jobs")}
                         whileHover={{ scale: 1.05 }}
-                        className={`whitespace-nowrap py-3 px-4 font-medium text-sm border-b-2 mx-2 ${activeTab === tab
-                                ? "border-teal-400 text-white"
-                                : "border-transparent text-gray-400 hover:text-white"
+                        className={`whitespace-nowrap py-3 px-4 font-medium text-sm border-b-2 mx-2 transition-colors ${activeTab === tab
+                                ? "border-accent-teal text-foreground"
+                                : "border-transparent text-muted hover:text-foreground"
                             }`}
                     >
                         {tab === "status" ? "Status & Pending Offers" : "My Active Jobs"}
@@ -166,8 +166,8 @@ export const AgentHub = () => {
             {/* Tab Content */}
 {activeTab === "status" ? (
   <div className="mx-auto max-w-xl space-y-6">
-    <div className="bg-gray-800/60 p-6 rounded-lg">
-      <h3 className="text-xl font-bold">Your Status</h3>
+    <div className="bg-card/60 p-6 rounded-lg border border-border">
+      <h3 className="text-xl font-bold text-foreground">Your Status</h3>
       <div className="flex items-center justify-between mt-4">
         <p
           className={`font-bold text-lg ${
@@ -180,8 +180,8 @@ export const AgentHub = () => {
           onClick={handleToggleAvailability}
           disabled={loading}
           className={`font-bold py-2 px-6 rounded-lg ${
-            isAvailable ? "bg-red-500" : "bg-green-500"
-          } text-white disabled:bg-gray-500`}
+            isAvailable ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+          } text-background transition-colors disabled:bg-muted`}
         >
           {loading ? "Updating..." : isAvailable ? "Go Offline" : "Go Online"}
         </button>
@@ -189,14 +189,14 @@ export const AgentHub = () => {
     </div>
 
     <div>
-      <h3 className="text-2xl font-bold mb-4">Pending Offers</h3>
+      <h3 className="text-2xl font-bold mb-4 text-foreground">Pending Offers</h3>
       <AgentOffers />
     </div>
   </div>
 ) : (
   <div>
-    <h3 className="text-2xl font-bold mb-4">My Active Jobs</h3>
-    <p className="text-gray-400 mb-6">
+    <h3 className="text-2xl font-bold mb-4 text-foreground">My Active Jobs</h3>
+    <p className="text-muted mb-6">
       These are deliveries you have accepted and are currently assigned to.
     </p>
     <MyOrdersView />

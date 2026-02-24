@@ -137,7 +137,7 @@ export default function WasteCompliancePage() {
   ];
 
   return (
-    <div className="bg-transparent text-slate-100">
+    <div className="bg-transparent text-foreground">
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Input Section */}
@@ -145,7 +145,7 @@ export default function WasteCompliancePage() {
             <h2 className="text-2xl font-black mb-1 text-gradient flex items-center">
               Compliance Architect
             </h2>
-            <p className="text-slate-400 mb-8 text-sm font-medium opacity-80 uppercase tracking-widest">Regulatory Intelligence System</p>
+            <p className="text-muted mb-8 text-sm font-medium opacity-80 uppercase tracking-widest">Regulatory Intelligence System</p>
 
 
             {error && (
@@ -157,7 +157,7 @@ export default function WasteCompliancePage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-muted mb-1">
                   Waste Material
                 </label>
                 <input
@@ -165,7 +165,7 @@ export default function WasteCompliancePage() {
                   value={waste}
                   onChange={(e) => setWaste(e.target.value)}
                   placeholder="e.g., Sulphuric Acid, Used Batteries, Medical Waste"
-                  className="w-full bg-gray-700/60 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent-teal"
                 />
               </div>
 
@@ -185,7 +185,7 @@ export default function WasteCompliancePage() {
               <button
                 onClick={generateCompliancePlan}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-accent-teal to-accent-cyan hover:opacity-90 text-background font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <span>
@@ -202,7 +202,7 @@ export default function WasteCompliancePage() {
             </div>
 
             <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-3 text-teal-300">
+              <h3 className="text-lg font-semibold mb-3 text-accent-teal">
                 <i className="fas fa-lightbulb mr-2"></i>Example Plans:
               </h3>
               <div className="grid grid-cols-1 gap-2">
@@ -213,10 +213,10 @@ export default function WasteCompliancePage() {
                       setWaste(example.waste);
                       setLocation(example.location);
                     }}
-                    className="bg-gray-700/40 hover:bg-gray-700/70 border border-gray-600 rounded-lg p-3 text-sm cursor-pointer transition-colors duration-200"
+                    className="bg-background/40 hover:bg-background/70 border border-border rounded-lg p-3 text-sm cursor-pointer transition-colors duration-200"
                   >
-                    <div className="font-medium">{example.waste}</div>
-                    <div className="text-gray-400 text-xs">{example.location}</div>
+                    <div className="font-medium text-foreground">{example.waste}</div>
+                    <div className="text-muted text-xs">{example.location}</div>
                   </div>
                 ))}
               </div>
@@ -228,7 +228,7 @@ export default function WasteCompliancePage() {
             <h2 className="text-2xl font-black mb-1 text-gradient flex items-center">
               Compliance Roadmap
             </h2>
-            <p className="text-slate-400 mb-8 text-sm font-medium opacity-80 uppercase tracking-widest leading-none">AI Generated Documentation</p>
+            <p className="text-muted mb-8 text-sm font-medium opacity-80 uppercase tracking-widest leading-none">AI Generated Documentation</p>
 
             {isLoading ? (
               <div className="flex flex-col items-center justify-center h-96">
@@ -236,14 +236,14 @@ export default function WasteCompliancePage() {
                   <div className="absolute inset-0 border-4 border-teal-500/20 rounded-full"></div>
                   <div className="absolute inset-0 border-4 border-teal-500 rounded-full border-t-transparent animate-spin"></div>
                 </div>
-                <p className="text-slate-400 font-medium animate-pulse">Analyzing Regulations...</p>
+                <p className="text-muted font-medium animate-pulse">Analyzing Regulations...</p>
               </div>
             ) : compliancePlan ? (
               <div className="overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
                 <CompliancePlanView plan={compliancePlan} />
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-96 text-slate-500 grayscale opacity-40">
+              <div className="flex flex-col items-center justify-center h-96 text-muted grayscale opacity-40">
                 <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -334,8 +334,8 @@ interface SectionProps {
 
 function Section({ title, icon, children }: SectionProps) {
   return (
-    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-      <h3 className="font-semibold text-teal-300 mb-3 flex items-center">
+    <div className="bg-card/50 p-4 rounded-lg border border-border">
+      <h3 className="font-semibold text-accent-teal mb-3 flex items-center">
         <i className={`fas fa-${icon} mr-2`}></i>
         {title}
       </h3>
@@ -354,8 +354,8 @@ function DetailItem({ label, value }: DetailItemProps) {
 
   return (
     <div className="flex justify-between">
-      <span className="text-gray-400">{label}:</span>
-      <span className="font-medium">{value}</span>
+      <span className="text-muted">{label}:</span>
+      <span className="font-medium text-foreground">{value}</span>
     </div>
   );
 }
@@ -370,10 +370,10 @@ function ListDetail({ label, items }: ListDetailProps) {
 
   return (
     <div>
-      <div className="text-gray-400 mb-1">{label}:</div>
+      <div className="text-muted mb-1">{label}:</div>
       <div className="flex flex-wrap gap-1">
         {items.map((item, index) => (
-          <span key={index} className="bg-gray-700/50 px-2 py-1 rounded text-xs">
+          <span key={index} className="bg-accent-teal/10 text-accent-teal px-2 py-1 rounded text-xs border border-accent-teal/20">
             {item}
           </span>
         ))}
@@ -392,8 +392,8 @@ function BooleanDetail({ label, value }: BooleanDetailProps) {
 
   return (
     <div className="flex justify-between">
-      <span className="text-gray-400">{label}:</span>
-      <span className={value ? "text-green-400" : "text-red-400"}>
+      <span className="text-muted">{label}:</span>
+      <span className={value ? "text-green-500 font-bold" : "text-red-500 font-bold"}>
         {value ? "Yes" : "No"}
       </span>
     </div>

@@ -245,90 +245,90 @@ const SelectAgentModal = ({ order, onClose }: { order: Order; onClose: () => voi
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-gray-800 rounded-xl p-8 w-full max-w-2xl">
-                <h2 className="text-xl font-bold mb-4">Assign Logistics for Order #{String(order.id)}</h2>
-                <p className="text-sm text-gray-400 mb-6">
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-card rounded-xl p-8 w-full max-w-2xl border border-border shadow-2xl">
+                <h2 className="text-xl font-bold mb-4 text-foreground">Assign Logistics for Order #{String(order.id)}</h2>
+                <p className="text-sm text-muted mb-6">
                     Choose a platform agent to trigger the 5% smart-contract payout, or switch to Local/Private logistics to keep the extra spread and pay offline.
                 </p>
 
                 <div className="flex gap-4 mb-6">
                     <button
                         onClick={() => setUseLocalAgent(false)}
-                        className={`flex-1 py-2 rounded-lg font-semibold ${!useLocalAgent ? "bg-teal-500 text-black" : "bg-gray-700 text-gray-200"}`}
+                        className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${!useLocalAgent ? "bg-accent-teal text-background" : "bg-muted text-foreground"}`}
                     >
                         Platform Agent
                     </button>
                     <button
                         onClick={() => setUseLocalAgent(true)}
-                        className={`flex-1 py-2 rounded-lg font-semibold ${useLocalAgent ? "bg-teal-500 text-black" : "bg-gray-700 text-gray-200"}`}
+                        className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${useLocalAgent ? "bg-accent-teal text-background" : "bg-muted text-foreground"}`}
                     >
                         Local / Private Agent
                     </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <input value={wasteMaterial} onChange={e => setWasteMaterial(e.target.value)} placeholder="Waste Material" className="w-full bg-gray-700 p-3 rounded-md border border-gray-600 text-white" />
-                    <input value={origin} onChange={e => setOrigin(e.target.value)} placeholder="Origin Location" className="w-full bg-gray-700 p-3 rounded-md border border-gray-600 text-white" />
-                    <input value={destination} onChange={e => setDestination(e.target.value)} placeholder="Destination Location" className="w-full bg-gray-700 p-3 rounded-md border border-gray-600 text-white" />
+                    <input value={wasteMaterial} onChange={e => setWasteMaterial(e.target.value)} placeholder="Waste Material" className="w-full bg-background p-3 rounded-md border border-border text-foreground" />
+                    <input value={origin} onChange={e => setOrigin(e.target.value)} placeholder="Origin Location" className="w-full bg-background p-3 rounded-md border border-border text-foreground" />
+                    <input value={destination} onChange={e => setDestination(e.target.value)} placeholder="Destination Location" className="w-full bg-background p-3 rounded-md border border-border text-foreground" />
                 </div>
 
                 {useLocalAgent ? (
                     <div className="space-y-4">
-                        <div className="bg-gray-900/40 p-4 rounded-lg border border-gray-700">
-                            <p className="text-sm text-gray-300 mb-3">Enter your private driver&apos;s wallet address (optional contact note helps your ops team).</p>
+                        <div className="bg-background/40 p-4 rounded-lg border border-border">
+                            <p className="text-sm text-dim mb-3">Enter your private driver&apos;s wallet address (optional contact note helps your ops team).</p>
                             <input
                                 value={localAgentWallet}
                                 onChange={e => setLocalAgentWallet(e.target.value)}
                                 placeholder="0x… Local Agent Wallet"
-                                className="w-full bg-gray-700 p-3 rounded-md border border-gray-600 text-white mb-3"
+                                className="w-full bg-background p-3 rounded-md border border-border text-foreground mb-3"
                             />
                             <input
                                 value={localAgentContact}
                                 onChange={e => setLocalAgentContact(e.target.value)}
                                 placeholder="Email / Phone (optional)"
-                                className="w-full bg-gray-700 p-3 rounded-md border border-gray-600 text-white"
+                                className="w-full bg-background p-3 rounded-md border border-border text-foreground"
                             />
                         </div>
                         <button
                             onClick={handleAssignLocalAgent}
                             disabled={loading}
-                            className="w-full bg-amber-500 text-black font-bold py-3 rounded-lg disabled:bg-gray-500"
+                            className="w-full bg-accent-blue text-white font-bold py-3 rounded-lg disabled:bg-muted hover:opacity-90 transition-opacity"
                         >
                             {loading ? "Assigning..." : "Assign Local Agent (No Platform Fee)"}
                         </button>
                     </div>
                 ) : (
                     <>
-                        <h3 className="font-semibold mb-2">Select an Available Agent:</h3>
+                        <h3 className="font-semibold mb-2 text-foreground">Select an Available Agent:</h3>
                         <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                            {loading && <p>Loading...</p>}
+                            {loading && <p className="text-muted">Loading...</p>}
                             {error && <p className="text-red-500">{error}</p>}
                             {!loading && availableAgents.length > 0 ? (
                                 availableAgents.map(agent => (
-                                    <div key={agent.walletAddress} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg">
+                                    <div key={agent.walletAddress} className="flex items-center justify-between p-4 bg-background/50 rounded-lg border border-border">
                                         <div>
-                                            <p className="font-bold text-white">{agent.name} <span className="text-sm text-gray-400">({agent.companyName})</span></p>
-                                            <p className="text-xs text-gray-500 font-mono">{agent.walletAddress}</p>
+                                            <p className="font-bold text-foreground">{agent.name} <span className="text-sm text-muted">({agent.companyName})</span></p>
+                                            <p className="text-xs text-muted font-mono">{agent.walletAddress}</p>
                                         </div>
                                         <button
                                             onClick={() => handleSendOffer(agent.walletAddress)}
                                             disabled={loading}
-                                            className="bg-teal-500 text-gray-900 font-bold py-2 px-4 rounded-lg disabled:bg-gray-500"
+                                            className="bg-accent-teal text-background font-bold py-2 px-4 rounded-lg disabled:bg-muted hover:opacity-90 transition-opacity"
                                         >
                                             Send Offer
                                         </button>
                                     </div>
                                 ))
                             ) : (
-                                !loading && <p className="text-gray-400 text-center py-8">No agents are currently available.</p>
+                                !loading && <p className="text-muted text-center py-8">No agents are currently available.</p>
                             )}
                         </div>
                     </>
                 )}
 
                 <div className="flex justify-end mt-6">
-                    <button onClick={onClose} className="bg-gray-600 py-2 px-4 rounded-lg">Cancel</button>
+                    <button onClick={onClose} className="bg-muted py-2 px-4 rounded-lg text-foreground hover:opacity-80 transition-opacity">Cancel</button>
                 </div>
             </div>
         </div>

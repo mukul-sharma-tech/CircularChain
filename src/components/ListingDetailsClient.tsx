@@ -390,10 +390,10 @@ export default function ListingDetailsClient({ listingId }: Props) {
   const quantityAvailable = listing.quantityAvailable || BigInt(0);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-900 rounded-xl border border-gray-800">
+    <div className="max-w-4xl mx-auto p-6 bg-card rounded-xl border border-border">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <div className="w-full h-80 bg-gray-800 rounded overflow-hidden mb-4">
+          <div className="w-full h-80 bg-background rounded overflow-hidden mb-4">
             {images && images.length > 0 ? (
               <img
                 src={images[0]}
@@ -401,12 +401,12 @@ export default function ListingDetailsClient({ listingId }: Props) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">No image</div>
+              <div className="flex items-center justify-center h-full text-muted">No image</div>
             )}
           </div>
           <div className="flex gap-3">
             {images.map((u, i) => (
-              <div key={i} className="w-20 h-20 rounded overflow-hidden border border-gray-700">
+              <div key={i} className="w-20 h-20 rounded overflow-hidden border border-border">
                 <img
                   src={u}
                   alt={`img-${i}`}
@@ -417,16 +417,16 @@ export default function ListingDetailsClient({ listingId }: Props) {
           </div>
         </div>
         <div>
-          <h1 className="text-2xl font-bold mb-2">{listing.name}</h1>
-          <p className="text-gray-400 mb-2">From: {listing.companyName}</p>
-          <p className="text-teal-400 mb-2">
+          <h1 className="text-2xl font-bold mb-2 text-foreground">{listing.name}</h1>
+          <p className="text-muted mb-2">From: {listing.companyName}</p>
+          <p className="text-accent-teal mb-2">
             Price: {ethers.formatEther(pricePerUnit)} ETH / unit
           </p>
-          <p className="text-gray-300 mb-4">Available: {quantityAvailable.toString()} units</p>
+          <p className="text-dim mb-4">Available: {quantityAvailable.toString()} units</p>
 
           <div className="mb-4">
-            <p className="text-sm text-gray-400">
-              Rating: <span className="font-semibold text-white">{avgRating.toFixed(2)}</span> ({reviewsCount} reviews)
+            <p className="text-sm text-muted">
+              Rating: <span className="font-semibold text-foreground">{avgRating.toFixed(2)}</span> ({reviewsCount} reviews)
             </p>
           </div>
 
@@ -434,33 +434,33 @@ export default function ListingDetailsClient({ listingId }: Props) {
             {reviews.length > 0 ? (
               <div className="space-y-3">
                 {reviews.map((r, idx) => (
-                  <div key={idx} className="p-3 bg-gray-800/40 rounded border border-gray-700">
+                  <div key={idx} className="p-3 bg-card/40 rounded border border-border">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="font-semibold text-white">{r.rating} ⭐</div>
-                        <div className="text-xs text-gray-400">
+                        <div className="font-semibold text-foreground">{r.rating} ⭐</div>
+                        <div className="text-xs text-muted">
                           by {r.reviewer.slice(0,6)}...{r.reviewer.slice(-4)}
                         </div>
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-muted">
                         {new Date(r.timestamp * 1000).toLocaleString()}
                       </div>
                     </div>
-                    <div className="mt-2 text-gray-300 text-sm">
-                      {r.review || <span className="text-gray-500 italic">No comment</span>}
+                    <div className="mt-2 text-dim text-sm">
+                      {r.review || <span className="text-muted italic">No comment</span>}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-muted">
                 {reviewsCount > 0 ? "Reviews exist but details are unavailable" : "No reviews yet."}
               </div>
             )}
           </div>
 
           <button
-            className="bg-teal-500 px-4 py-2 rounded text-white hover:bg-teal-400"
+            className="bg-accent-teal px-4 py-2 rounded text-background hover:opacity-90 transition-opacity"
             onClick={handleCreateOrder}
           >
             Order Now
@@ -469,14 +469,14 @@ export default function ListingDetailsClient({ listingId }: Props) {
           {user?.isLoggedIn ? (
             myCompletedOrderId ? (
               !hasReviewedFlag ? (
-                <div className="mt-6 p-4 bg-gray-800/60 rounded">
-                  <h3 className="font-semibold mb-2">Submit a review</h3>
+                <div className="mt-6 p-4 bg-card/60 rounded border border-border">
+                  <h3 className="font-semibold mb-2 text-foreground">Submit a review</h3>
                   <div className="flex items-center gap-3 mb-3">
-                    <label className="text-sm text-gray-400">Rating</label>
+                    <label className="text-sm text-muted">Rating</label>
                     <select 
                       value={ratingInput} 
                       onChange={(e) => setRatingInput(Number(e.target.value))} 
-                      className="bg-gray-900 p-2 rounded"
+                      className="bg-background text-foreground border border-border p-2 rounded"
                     >
                       {[5,4,3,2,1].map(r => (
                         <option key={r} value={r}>{r} ⭐</option>
@@ -487,18 +487,18 @@ export default function ListingDetailsClient({ listingId }: Props) {
                     value={reviewText} 
                     onChange={(e) => setReviewText(e.target.value)} 
                     placeholder="Share your experience (optional)" 
-                    className="w-full bg-gray-900 p-2 rounded mb-3" 
+                    className="w-full bg-background border border-border p-2 rounded mb-3 text-foreground" 
                   />
                   <div className="flex gap-3">
                     <button 
-                      className="bg-blue-600 px-4 py-2 rounded text-white" 
+                      className="bg-accent-blue px-4 py-2 rounded text-white hover:opacity-90" 
                       disabled={submittingReview} 
                       onClick={handleSubmitReview}
                     >
                       {submittingReview ? 'Submitting...' : 'Submit Review'}
                     </button>
                     <button 
-                      className="bg-gray-700 px-4 py-2 rounded text-white" 
+                      className="bg-muted px-4 py-2 rounded text-foreground hover:opacity-90" 
                       onClick={() => { setReviewText(''); setRatingInput(5); }}
                     >
                       Reset
@@ -506,7 +506,7 @@ export default function ListingDetailsClient({ listingId }: Props) {
                   </div>
                 </div>
               ) : (
-                <div className="mt-4 text-sm text-gray-400">
+              <div className="mt-4 text-sm text-muted">
                   You have already submitted a review for this listing.
                 </div>
               )
@@ -519,10 +519,10 @@ export default function ListingDetailsClient({ listingId }: Props) {
             <div className="mt-4 text-sm text-gray-400">Please log in to submit a review.</div>
           )}
 
-          <div className="mt-6 text-sm text-gray-400">
-            <h3 className="font-semibold mb-2">Meta Hash</h3>
-            <p className="break-words">{listing.dataHash}</p>
-            <p className="mt-2 text-xs text-gray-500">
+          <div className="mt-6 text-sm text-muted">
+            <h3 className="font-semibold mb-2 text-foreground">Meta Hash</h3>
+            <p className="break-words text-dim">{listing.dataHash}</p>
+            <p className="mt-2 text-xs text-muted/60">
               This is a SHA256 hash of the description/specs (stored off-chain by the seller).
             </p>
           </div>
@@ -538,13 +538,13 @@ export default function ListingDetailsClient({ listingId }: Props) {
           className="mt-12"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-lg bg-teal-500/10">
-              <svg className="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 rounded-lg bg-accent-teal/10">
+              <svg className="w-6 h-6 text-accent-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-white">You May Also Like</h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-teal-500/50 to-transparent" />
+            <h2 className="text-2xl font-bold text-foreground">You May Also Like</h2>
+            <div className="flex-1 h-px bg-gradient-to-r from-accent-teal/50 to-transparent" />
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -557,10 +557,10 @@ export default function ListingDetailsClient({ listingId }: Props) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   onClick={() => router.push(`/listing/${slug}`)}
-                  className="group cursor-pointer bg-gray-800/50 rounded-xl border border-gray-700 overflow-hidden hover:border-teal-500/50 transition-all hover:shadow-lg hover:shadow-teal-500/10"
+                  className="group cursor-pointer bg-card/50 rounded-xl border border-border overflow-hidden hover:border-accent-teal/50 transition-all hover:shadow-lg hover:shadow-accent-teal/10"
                 >
                   {/* Image */}
-                  <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
+                  <div className="relative w-full h-48 bg-background overflow-hidden">
                     {item.imageHashes && item.imageHashes.length > 0 ? (
                       <img
                         src={item.imageHashes[0]}
@@ -568,7 +568,7 @@ export default function ListingDetailsClient({ listingId }: Props) {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-gray-600">
+                      <div className="flex items-center justify-center h-full text-muted/50">
                         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
@@ -588,21 +588,21 @@ export default function ListingDetailsClient({ listingId }: Props) {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="font-bold text-white mb-1 line-clamp-2 group-hover:text-teal-400 transition-colors">
+                    <h3 className="font-bold text-foreground mb-1 line-clamp-2 group-hover:text-accent-teal transition-colors">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-gray-400 mb-3">{item.companyName}</p>
+                    <p className="text-sm text-muted mb-3">{item.companyName}</p>
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-gray-500">Price per unit</p>
-                        <p className="text-teal-400 font-bold">
+                        <p className="text-xs text-muted">Price per unit</p>
+                        <p className="text-accent-teal font-bold">
                           {parseFloat(ethers.formatEther(item.pricePerUnit)).toFixed(4)} ETH
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-gray-500">Available</p>
-                        <p className="text-white font-semibold">{item.quantityAvailable}</p>
+                        <p className="text-xs text-muted">Available</p>
+                        <p className="text-foreground font-semibold">{item.quantityAvailable}</p>
                       </div>
                     </div>
                   </div>

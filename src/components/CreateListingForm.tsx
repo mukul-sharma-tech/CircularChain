@@ -173,7 +173,7 @@
 //           value={price}
 //           onChange={(e) => setPrice(e.target.value)}
 //           placeholder="Price per Unit (in ETH)"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -181,7 +181,7 @@
 //           value={quantity}
 //           onChange={(e) => setQuantity(e.target.value)}
 //           placeholder="Total Quantity"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           min="1"
 //           required
 //         />
@@ -197,7 +197,7 @@
 //           value={grade}
 //           onChange={(e) => setGrade(e.target.value)}
 //           placeholder="Grade"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -205,7 +205,7 @@
 //           value={origin}
 //           onChange={(e) => setOrigin(e.target.value)}
 //           placeholder="Origin"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -213,7 +213,7 @@
 //           value={purity}
 //           onChange={(e) => setPurity(e.target.value)}
 //           placeholder="Purity"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 
@@ -438,7 +438,7 @@
 //           value={price}
 //           onChange={(e) => setPrice(e.target.value)}
 //           placeholder="Price per Unit (in ETH)"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -446,7 +446,7 @@
 //           value={quantity}
 //           onChange={(e) => setQuantity(e.target.value)}
 //           placeholder="Total Quantity"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           min="1"
 //           required
 //         />
@@ -462,7 +462,7 @@
 //           value={grade}
 //           onChange={(e) => setGrade(e.target.value)}
 //           placeholder="Grade"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -470,7 +470,7 @@
 //           value={origin}
 //           onChange={(e) => setOrigin(e.target.value)}
 //           placeholder="Origin"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 //         <input
@@ -478,7 +478,7 @@
 //           value={purity}
 //           onChange={(e) => setPurity(e.target.value)}
 //           placeholder="Purity"
-//           className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+//           className="p-2 rounded-lg bg-background text-foreground border border-border"
 //           required
 //         />
 
@@ -693,7 +693,7 @@ export const CreateListingForm = () => {
 
   return (
     <motion.div
-      className="bg-gray-800/50 backdrop-blur-md p-6 rounded-xl border border-teal-500/30 shadow-lg max-w-2xl mx-auto mb-6"
+      className="bg-card backdrop-blur-md p-6 rounded-xl border border-accent-teal/30 shadow-lg max-w-2xl mx-auto mb-6"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
@@ -708,7 +708,7 @@ export const CreateListingForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Material Name (e.g., Scrap Metal)"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700 col-span-1 md:col-span-2"
+          className="p-2 rounded-lg bg-background text-foreground border border-border col-span-1 md:col-span-2"
           required
         />
         <input
@@ -716,7 +716,7 @@ export const CreateListingForm = () => {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Price per Unit (in ETH)"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-background text-foreground border border-border"
           required
         />
         <input
@@ -724,7 +724,7 @@ export const CreateListingForm = () => {
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           placeholder="Total Quantity"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-background text-foreground border border-border"
           min="1"
           required
         />
@@ -732,7 +732,7 @@ export const CreateListingForm = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Short Description (what is the material, condition, etc.)"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700 col-span-1 md:col-span-2 min-h-[100px]"
+          className="p-2 rounded-lg bg-background text-foreground border border-border col-span-1 md:col-span-2 min-h-[100px]"
           required
         />
         <input
@@ -740,7 +740,7 @@ export const CreateListingForm = () => {
           value={grade}
           onChange={(e) => setGrade(e.target.value)}
           placeholder="Grade"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-background text-foreground border border-border"
           required
         />
         <input
@@ -748,7 +748,7 @@ export const CreateListingForm = () => {
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           placeholder="Origin"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-background text-foreground border border-border"
           required
         />
         <input
@@ -756,23 +756,23 @@ export const CreateListingForm = () => {
           value={purity}
           onChange={(e) => setPurity(e.target.value)}
           placeholder="Purity"
-          className="p-2 rounded-lg bg-gray-900 text-white border border-gray-700"
+          className="p-2 rounded-lg bg-background text-foreground border border-border"
           required
         />
 
         {/* Image Uploads */}
         <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm text-gray-300 mb-2">Upload Images</label>
+          <label className="block text-sm text-dim mb-2">Upload Images</label>
           <input
             type="file"
             accept="image/*"
             multiple
             onChange={handleFilesChange}
-            className="w-full text-sm text-gray-200"
+            className="w-full text-sm text-muted"
           />
           <div className="mt-3 flex gap-3 flex-wrap">
             {selectedFiles.map((f, idx) => (
-              <div key={idx} className="w-20 h-20 bg-gray-900 rounded overflow-hidden relative border border-gray-700">
+              <div key={idx} className="w-20 h-20 bg-background rounded overflow-hidden relative border border-border">
                 <Image
                   src={URL.createObjectURL(f)}
                   alt={f.name}
@@ -781,14 +781,14 @@ export const CreateListingForm = () => {
                 />
               </div>
             ))}
-            {uploadingImages && <p className="text-sm text-gray-400">Uploading images...</p>}
+            {uploadingImages && <p className="text-sm text-muted">Uploading images...</p>}
           </div>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="col-span-1 md:col-span-2 bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-400 transition-colors"
+          className="col-span-1 md:col-span-2 bg-accent-teal text-background py-3 rounded-lg hover:opacity-90 transition-opacity"
         >
           {loading ? "Creating..." : "Create Listing"}
         </button>
